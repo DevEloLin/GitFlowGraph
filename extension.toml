@@ -1,0 +1,21 @@
+id = "gitflowgraph"
+name = "GitFlowGraph"
+description = "Modern Git Graph & Smart Diff Workspace for Zed. Visualize branches, understand YAML/Terraform/JSON diffs semantically, and track release flows — all without leaving your editor."
+version = "0.1.0"
+schema_version = 1
+authors = ["GitFlowGraph Team <team@gitflowgraph.dev>"]
+repository = "https://github.com/gitflowgraph/gitflowgraph"
+
+[language_servers.gitflowgraph]
+name = "GitFlowGraph Runtime"
+languages = ["GitFlowGraph"]
+
+[slash_commands.gitflowgraph]
+description = "Open the GitFlowGraph Git visualization panel"
+requires_argument = false
+tooltip = "Launch GitFlowGraph"
+
+[slash_commands.gitflowgraph-diff]
+description = "Show smart diff for current file or commit range (usage: /gitflowgraph-diff <commit> or <from>..<to>)"
+requires_argument = true
+tooltip = "GitFlowGraph smart diff"
