@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GitFlowGraph — Git visualization for Zed</title>
-  <meta name="description" content="Interactive Git graph, Smart Diff for YAML/JSON/Terraform, Release Flow, and Cross-Repo Timeline — all inside Zed." />
+  <title>GitFlowGraph — Zed 的 Git 可视化工作区</title>
+  <meta name="description" content="交互式提交图谱、Smart Diff（开发 / 发布 / 工作流）、发布管理、Hotfix 向导 — 全部内嵌于 Zed 编辑器。" />
   <meta property="og:title" content="GitFlowGraph" />
-  <meta property="og:description" content="The Git visualization workspace built for Zed." />
+  <meta property="og:description" content="专为 Zed 打造的 Git 可视化工作区。" />
   <meta property="og:image" content="assets/og.png" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,11 +34,11 @@
         <span>GitFlowGraph</span>
       </a>
       <nav class="nav-links">
-        <a href="#features">Features</a>
-        <a href="pricing.html">Pricing</a>
+        <a href="#features">功能</a>
+        <a href="pricing.html">定价</a>
         <a href="https://github.com/DevEloLin/GitFlowGraph" target="_blank">GitHub</a>
       </nav>
-      <a href="#install" class="btn btn-sm">Install Free</a>
+      <a href="#install" class="btn btn-sm">免费安装</a>
     </div>
   </header>
 
@@ -50,21 +50,21 @@
         Zed Extension
       </div>
       <h1>
-        Understand your Git history<br/>
-        <span class="gradient-text">without leaving Zed</span>
+        在 Zed 内完整掌握<br/>
+        <span class="gradient-text">你的 Git 历史</span>
       </h1>
       <p class="hero-sub">
-        Interactive commit graph, semantic diff for YAML &amp; Terraform,<br class="br-lg"/>
-        release tracking, and cross-repo timelines — all in one panel.
+        交互式提交图谱、语义化 Smart Diff、发布管理与 Hotfix 向导<br class="br-lg"/>
+        — 全部内嵌于 Zed，无需离开编辑器。
       </p>
       <div class="hero-actions">
         <a href="#install" class="btn btn-primary">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.97a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.779a.749.749 0 1 1 1.06-1.06l1.97 1.97Z"/></svg>
-          Install in Zed — Free
+          在 Zed 中安装 — 免费
         </a>
         <a href="https://github.com/DevEloLin/GitFlowGraph" class="btn btn-ghost" target="_blank">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-          View on GitHub
+          在 GitHub 查看
         </a>
       </div>
       <div class="hero-screenshot">
@@ -72,7 +72,7 @@
           <div class="chrome-dots"><span></span><span></span><span></span></div>
           <div class="chrome-bar"><span class="chrome-url">localhost:9876</span></div>
         </div>
-        <img src="assets/screenshot-graph.png" alt="GitFlowGraph commit graph" class="screenshot-img" />
+        <img src="assets/screenshot-graph.png" alt="GitFlowGraph 提交图谱" class="screenshot-img" />
       </div>
     </div>
   </section>
@@ -80,14 +80,14 @@
   <!-- ── Strip ─────────────────────────────────────────────────────────── -->
   <div class="strip">
     <div class="container strip-inner">
-      <span class="strip-label">Works with</span>
+      <span class="strip-label">支持格式</span>
       <span class="pill">YAML</span>
       <span class="pill">JSON</span>
       <span class="pill">Terraform / HCL</span>
-      <span class="pill">Monorepos</span>
-      <span class="pill">Multi-repo</span>
+      <span class="pill">Kubernetes</span>
+      <span class="pill">GitHub Actions</span>
       <span class="sep">·</span>
-      <span class="strip-label">Runs 100% locally &nbsp;·&nbsp; Zero telemetry</span>
+      <span class="strip-label">100% 本地运行 &nbsp;·&nbsp; 零遥测</span>
     </div>
   </div>
 
@@ -95,20 +95,22 @@
   <section class="features" id="features">
     <div class="container">
       <div class="section-header">
-        <h2>Everything you need to understand your Git history</h2>
-        <p>Built for engineers who live in their editor and want answers, not context-switching.</p>
+        <h2>完整掌握你的 Git 历史所需的一切</h2>
+        <p>为在编辑器中工作的工程师而生——要答案，不要上下文切换。</p>
       </div>
 
       <!-- Git Graph -->
       <div class="feature-block">
         <div class="feature-text">
-          <h3>Git Commit Graph</h3>
-          <p>Visualize your entire history as an interactive graph with color-coded branch lanes, merge-edge Bézier curves, and a glowing HEAD indicator.</p>
+          <h3>Git 提交图谱</h3>
+          <p>以交互式多泳道图可视化完整历史，SVG 边缘曲线、发光 HEAD 指示器、环境徽章一应俱全。</p>
           <ul class="feature-list">
-            <li>Color-coded lane per branch with SVG edge curves</li>
-            <li>Inline branch &amp; tag pill badges on every commit</li>
-            <li>Filter by keyword, regex, author, date range, or file path</li>
-            <li>Right-click menu: checkout, branch, tag, cherry-pick, reset</li>
+            <li>每分支独立颜色，贝塞尔曲线连接合并边</li>
+            <li>提交内联显示分支 &amp; Tag 胶囊标签</li>
+            <li>⬡ 环境部署徽章标记已上线提交</li>
+            <li>⚠️ 自动识别 infra / terraform / helm 类提交</li>
+            <li>关键字、正则、作者、分支、日期范围、文件路径多维过滤</li>
+            <li>右键菜单：Checkout、新建分支、Cherry-pick、Reset 等</li>
           </ul>
         </div>
         <div class="feature-visual placeholder">
@@ -123,7 +125,7 @@
               <line x1="14" y1="8" x2="20" y2="14" stroke="#3fb950" stroke-width="2"/>
               <line x1="8" y1="14" x2="14" y2="20" stroke="#d29922" stroke-width="2"/>
             </svg>
-            <span>Git Graph screenshot</span>
+            <span>提交图谱截图</span>
           </div>
         </div>
       </div>
@@ -131,8 +133,13 @@
       <!-- Smart Diff -->
       <div class="feature-block reverse">
         <div class="feature-text">
-          <h3>Smart Diff</h3>
-          <p>Stop reading wall-of-text diffs. Smart Diff understands the <em>shape</em> of your config files and reports what logically changed — with full structural paths.</p>
+          <h3>Smart Diff — 三种上下文模式</h3>
+          <p>不再阅读纯文本差异墙。Smart Diff 理解文件的<em>结构</em>，精确汇报逻辑变更，并按工作上下文分为三种模式。</p>
+          <ul class="feature-list">
+            <li><strong>开发 Diff</strong> — 工作区、暂存区、最近提交、分支 vs 基准对比</li>
+            <li><strong>发布 Diff</strong> — 任意 Tag / 分支对比，结构化文件自动语义分析</li>
+            <li><strong>工作流 Diff</strong> — 自动筛选 CI/CD 文件，按 GitHub Actions / Docker / Terraform / K8s / Helm 分组</li>
+          </ul>
           <div class="code-demo">
             <div class="code-line modified"><span class="code-op mod">~</span><span class="code-path">spec.template.containers[0].image</span></div>
             <div class="code-line modified sub"><span class="code-op"></span><span class="code-val">nginx:1.24 <span class="arrow">→</span> nginx:1.25</span></div>
@@ -151,53 +158,79 @@
               <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0Z" fill="#1f6feb"/>
               <path d="M4 5h8M4 8h6M4 11h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
-            <span>Smart Diff screenshot</span>
+            <span>Smart Diff 截图</span>
           </div>
         </div>
       </div>
 
-      <!-- Release Flow -->
+      <!-- Commit Detail -->
       <div class="feature-block">
         <div class="feature-text">
-          <h3>Release Flow</h3>
-          <p>Pick any two refs and instantly see what's in-flight between your environments — with a one-click Markdown changelog.</p>
+          <h3>提交详情 &amp; Diff 查看器</h3>
+          <p>点击任意提交，无需跳转，直接在侧边面板查看完整变更详情。</p>
           <ul class="feature-list">
-            <li>Compare any branch, tag, or commit SHA</li>
-            <li>Chronological commit list between the two refs</li>
-            <li>Auto-generated changelog grouped by conventional commit type</li>
-            <li>Hotfix detection for cherry-picked commits</li>
+            <li>可折叠目录树，含 A / M / D / R 状态徽章及增减行数</li>
+            <li>统一 Diff — 经典 +/- 行差异，token 级着色</li>
+            <li>左右并排 Diff — 字符级行内高亮，双栏同步滚动</li>
+            <li>文件历史 — 查看选中文件被修改的所有提交</li>
+            <li>二进制文件检测，优雅提示而非乱码</li>
           </ul>
         </div>
         <div class="feature-visual placeholder">
-          <img src="assets/screenshot-release.png" alt="Release Flow" onerror="this.style.display='none'" />
+          <img src="assets/screenshot-diff.png" alt="提交详情" onerror="this.style.display='none'" />
+          <div class="placeholder-inner">
+            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3">
+              <path d="M2 2h12v12H2z" stroke="#58a6ff" stroke-width="1.5"/>
+              <path d="M5 6h6M5 9h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span>提交详情截图</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Release -->
+      <div class="feature-block reverse">
+        <div class="feature-text">
+          <h3>发布管理</h3>
+          <p>从 Git 历史直接提取发布情报，无需任何外部集成。</p>
+          <ul class="feature-list">
+            <li><strong>变更日志</strong> — 对比任意两 ref，自动生成 Breaking / Feature / Fix / Infra 分类日志，支持 Markdown 导出</li>
+            <li><strong>发布风险评分</strong> — 0–100 评分，文件级风险因素明细</li>
+            <li><strong>Actions</strong> — Hotfix 分支同步状态检查，无发布说明 Tag 检测</li>
+            <li><strong>Environments</strong> — 环境流水线网格，实时显示各环境领先 / 落后提交数</li>
+            <li><strong>速度仪表板</strong> — 发布频率、Hotfix 占比、平均提交数等指标</li>
+            <li><strong>Hotfix 向导</strong> — 4 步引导式紧急修复工作流，含脚本预览和一键执行</li>
+          </ul>
+        </div>
+        <div class="feature-visual placeholder">
+          <img src="assets/screenshot-release.png" alt="发布管理" onerror="this.style.display='none'" />
           <div class="placeholder-inner">
             <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3">
               <path d="M1 8h14M8 1l7 7-7 7" stroke="#3fb950" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span>Release Flow screenshot</span>
+            <span>发布管理截图</span>
           </div>
         </div>
       </div>
 
-      <!-- Timeline -->
-      <div class="feature-block reverse">
+      <!-- Worktrees -->
+      <div class="feature-block">
         <div class="feature-text">
-          <h3>Cross-Repo Timeline</h3>
-          <p>One scrollable timeline of commits across all your repositories. Stop switching terminals to understand what shipped when.</p>
+          <h3>Worktrees &amp; 工作区档案</h3>
+          <p>在编辑器内管理 Git 工作树，快速切换多仓库上下文。</p>
           <ul class="feature-list">
-            <li>Up to 5 repositories in one unified workspace</li>
-            <li>All commits merged into a single chronological view</li>
-            <li>Author and keyword search across all repos simultaneously</li>
-            <li><kbd>⌘1</kbd> <kbd>⌘2</kbd> <kbd>⌘3</kbd> to switch the active repo</li>
+            <li>列出所有工作树：路径、分支、HEAD、MAIN / LOCKED 状态</li>
+            <li>添加 / 删除工作树，无需离开编辑器</li>
+            <li>命名工作区配置档案，一键切换活跃仓库</li>
           </ul>
         </div>
         <div class="feature-visual placeholder">
-          <img src="assets/screenshot-timeline.png" alt="Cross-Repo Timeline" onerror="this.style.display='none'" />
+          <img src="assets/screenshot-worktrees.png" alt="Worktrees" onerror="this.style.display='none'" />
           <div class="placeholder-inner">
             <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3">
-              <path d="M1 4h14M1 8h14M1 12h14" stroke="#58a6ff" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M2 4h12M2 8h8M2 12h10" stroke="#d29922" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
-            <span>Timeline screenshot</span>
+            <span>Worktrees 截图</span>
           </div>
         </div>
       </div>
@@ -209,30 +242,30 @@
   <section class="install" id="install">
     <div class="container">
       <div class="section-header">
-        <h2>Get started in 30 seconds</h2>
+        <h2>30 秒上手</h2>
       </div>
       <div class="install-steps">
         <div class="step">
           <div class="step-num">1</div>
           <div class="step-body">
-            <h4>Open Zed Extensions</h4>
-            <p>Press <kbd>⌘⇧X</kbd> to open the Extensions panel.</p>
+            <h4>打开 Zed 插件市场</h4>
+            <p>按 <kbd>⌘⇧X</kbd> 打开 Extensions 面板。</p>
           </div>
         </div>
         <div class="step-arrow">→</div>
         <div class="step">
           <div class="step-num">2</div>
           <div class="step-body">
-            <h4>Search GitFlowGraph</h4>
-            <p>Type <strong>GitFlowGraph</strong> and click <strong>Install</strong>.</p>
+            <h4>搜索 GitFlowGraph</h4>
+            <p>输入 <strong>GitFlowGraph</strong> 并点击 <strong>Install</strong>。</p>
           </div>
         </div>
         <div class="step-arrow">→</div>
         <div class="step">
           <div class="step-num">3</div>
           <div class="step-body">
-            <h4>Launch</h4>
-            <p>Type <code>/gitflowgraph</code> in the AI panel, then open <code>localhost:9876</code>.</p>
+            <h4>启动</h4>
+            <p>在 AI 面板输入 <code>/gitflowgraph</code>，然后打开 <code>localhost:9876</code>。</p>
           </div>
         </div>
       </div>
@@ -244,19 +277,19 @@
     <div class="container privacy-inner">
       <div class="privacy-item">
         <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
-        Runs 100% locally
+        100% 本地运行
       </div>
       <div class="privacy-item">
         <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
-        No data leaves your machine
+        数据不离开你的机器
       </div>
       <div class="privacy-item">
         <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
-        Zero telemetry
+        零遥测
       </div>
       <div class="privacy-item">
         <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
-        Open source extension
+        扩展本体开源（MIT）
       </div>
     </div>
   </div>
@@ -279,31 +312,31 @@
           </svg>
           <span>GitFlowGraph</span>
         </a>
-        <p>Git visualization for Zed</p>
+        <p>Zed 的 Git 可视化工作区</p>
       </div>
       <div class="footer-links">
         <div class="footer-col">
-          <h5>Product</h5>
-          <a href="#features">Features</a>
-          <a href="pricing.html">Pricing</a>
-          <a href="#install">Install</a>
+          <h5>产品</h5>
+          <a href="#features">功能</a>
+          <a href="pricing.html">定价</a>
+          <a href="#install">安装</a>
         </div>
         <div class="footer-col">
-          <h5>Resources</h5>
+          <h5>资源</h5>
           <a href="https://github.com/DevEloLin/GitFlowGraph" target="_blank">GitHub</a>
           <a href="https://github.com/DevEloLin/GitFlowGraph/issues" target="_blank">Issues</a>
-          <a href="https://zed.dev/extensions?q=gitflowgraph" target="_blank">Zed Marketplace</a>
+          <a href="https://zed.dev/extensions?q=gitflowgraph" target="_blank">Zed 插件市场</a>
         </div>
         <div class="footer-col">
-          <h5>Legal</h5>
-          <a href="/terms">Terms</a>
-          <a href="/privacy">Privacy</a>
+          <h5>法律</h5>
+          <a href="/terms">服务条款</a>
+          <a href="/privacy">隐私政策</a>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
       <div class="container footer-bottom-inner">
-        <span>© 2025 GitFlowGraph. MIT license for the Zed extension wrapper.</span>
+        <span>© 2026 GitFlowGraph. Zed 扩展本体基于 MIT 许可证。</span>
         <span>team@gitflowgraph.dev</span>
       </div>
     </div>
