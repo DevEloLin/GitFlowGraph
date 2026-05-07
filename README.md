@@ -176,74 +176,6 @@ zed --install-extension .
 
 ---
 
-## Usage
-
-### Launch the panel
-
-Type in the Zed AI assistant:
-
-```
-/gitflowgraph
-```
-
-Then open **http://localhost:9876** in your browser.
-
-### Smart Diff a commit range
-
-```
-/gitflowgraph-diff HEAD~5..HEAD
-```
-
-### Keyboard shortcuts
-
-| Shortcut | Action |
-|----------|--------|
-| `⌘R` | Refresh commits, branches, tags |
-| `Esc` | Close commit detail panel |
-| `⌘1` `⌘2` `⌘3` | Switch active repository *(Pro)* |
-
-### Activate Pro / Start Trial
-
-Open **http://localhost:9876** → navigate to the **License** tab.
-
-- **30-day free trial** — one click, no credit card required
-- **Purchase** a license at [gitflowgraph.dev](https://gitflowgraph.dev) and paste the key
-
----
-
-## Architecture
-
-```
-┌──────────────────────────────────────────────────────┐
-│  Zed Editor                                          │
-│                                                      │
-│  ┌─────────────────────────────────────────────┐    │
-│  │  gitflowgraph  (this repo, MIT)             │    │
-│  │  Zed Extension + LSP stub                   │    │
-│  │  • Downloads runtime on first launch        │    │
-│  │  • Registers /gitflowgraph slash commands   │    │
-│  └───────────────────┬─────────────────────────┘    │
-│                      │ spawns                        │
-│  ┌───────────────────▼─────────────────────────┐    │
-│  │  gitflowgraph-core  (proprietary binary)    │    │
-│  │  • Axum HTTP server on :9876                │    │
-│  │  • React + Vite frontend (embedded)         │    │
-│  │  • Git engine via libgit2                   │    │
-│  │  • Smart Diff parser (YAML / JSON / HCL)    │    │
-│  │  • License & trial engine                   │    │
-│  └─────────────────────────────────────────────┘    │
-└──────────────────────────────────────────────────────┘
-```
-
-| Component | Repo | License |
-|-----------|------|---------|
-| Zed extension wrapper | `DevEloLin/GitFlowGraph` *(this repo)* | MIT |
-| Core runtime binary | `DevEloLin/GitFlowGraph-core` | Proprietary |
-
-This split keeps the Zed marketplace integration fully auditable while protecting the core algorithms.
-
----
-
 ## Privacy
 
 - **All Git operations run locally** — no commit data, diffs, or file contents ever leave your machine
@@ -271,8 +203,6 @@ Please open an issue before submitting large changes.
 | | Channel |
 |---|---------|
 | 🐛 | [GitHub Issues](https://github.com/DevEloLin/GitFlowGraph/issues) — bugs & feature requests |
-| 💳 | team@gitflowgraph.dev — license & billing |
-| 🌐 | [gitflowgraph.dev](https://gitflowgraph.dev) — website & docs |
 
 ---
 
@@ -280,12 +210,10 @@ Please open an issue before submitting large changes.
 
 The Zed extension wrapper in this repository is released under the **[MIT License](LICENSE)**.
 
-The `gitflowgraph-core` runtime binary is proprietary software — see [gitflowgraph.dev/terms](https://gitflowgraph.dev/terms) for the end-user license agreement.
-
 ---
 
 <div align="center">
 
-Built for the Zed community &nbsp;·&nbsp; [gitflowgraph.dev](https://gitflowgraph.dev)
+Built for the Zed community &nbsp;·&nbsp; [gitflowgraph.dev](https://github.com/DevEloLin/GitFlowGraph)
 
 </div>
