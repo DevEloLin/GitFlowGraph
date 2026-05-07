@@ -35,21 +35,20 @@ The extension wrapper in this repository is **open source (MIT)**. The runtime e
 
 ## Features at a Glance
 
-| | Feature | Free | Pro |
-|---|---------|:----:|:---:|
-| 📊 | Git commit graph | ✓ | ✓ |
-| 📋 | Commit table view | — | ✓ |
-| 🔍 | Commit detail & unified diff | ✓ | ✓ |
-| ↔️ | Side-by-side split diff | — | ✓ |
-| 🏷️ | Branch & tag labels | ✓ | ✓ |
-| 🔎 | Search, regex & multi-filter | ✓ | ✓ |
-| ⚡ | Uncommitted changes row | — | ✓ |
-| 🖱️ | Context menu Git actions | ✓ | ✓ |
-| 📈 | Commit limit | 500 | 5 000 |
-| 🧠 | **Smart Diff** (YAML / JSON / Terraform) | — | ✓ |
-| 🚀 | **Release Flow** | — | ✓ |
-| 🌐 | **Cross-Repo Timeline** | — | ✓ |
-| 🗂️ | Multi-repo workspace | — | ✓ |
+| | Feature |
+|---|---------|
+| 📊 | Git commit graph |
+| 📋 | Commit table view |
+| 🔍 | Commit detail & unified diff |
+| ↔️ | Side-by-side split diff |
+| 🏷️ | Branch & tag labels |
+| 🔎 | Search, regex & multi-filter |
+| ⚡ | Uncommitted changes row |
+| 🖱️ | Context menu Git actions |
+| 🧠 | **Smart Diff** — YAML / JSON / Terraform |
+| 🚀 | **Release Flow** |
+| 🌐 | **Cross-Repo Timeline** |
+| 🗂️ | Multi-repo workspace (up to 5 repos) |
 
 ---
 
@@ -88,14 +87,14 @@ Click any commit to open a full diff panel without navigating away.
 
 - **File tree** — collapsible directory tree of every changed file with `A` `M` `D` `R` status badges
 - **Unified diff** — classic `+` / `−` line diff with token-level coloring
-- **Side-by-side diff** *(Pro)* — split pane for easier before/after comparison
+- **Side-by-side diff** — split pane for easier before/after comparison
 - **Stats bar** — total files changed, lines added `+`, lines removed `−`
 - **Binary file detection** — graceful `Binary file — no preview` message instead of garbled output
 - **Parent links** — clickable short SHAs for merge commits
 
 ---
 
-## Smart Diff *(Pro)*
+## Smart Diff
 
 <img src="docs/assets/screenshot-smartdiff.png" alt="Smart Diff YAML JSON Terraform" width="860" />
 
@@ -129,7 +128,7 @@ Every change carries its full structural path so you always know exactly what ch
 
 ---
 
-## Release Flow *(Pro)*
+## Release Flow
 
 <img src="docs/assets/screenshot-release.png" alt="Release Flow" width="860" />
 
@@ -142,7 +141,7 @@ Compare any two refs to see exactly what is in-flight between your environments.
 
 ---
 
-## Cross-Repo Timeline *(Pro)*
+## Cross-Repo Timeline
 
 <img src="docs/assets/screenshot-timeline.png" alt="Cross-Repo Timeline" width="860" />
 
@@ -179,7 +178,6 @@ zed --install-extension .
 ## Privacy
 
 - **All Git operations run locally** — no commit data, diffs, or file contents ever leave your machine
-- **License validation is offline-first** — cryptographic verification with no server round-trip for day-to-day use
 - **Zero telemetry** — no analytics, no crash reporting, no usage tracking
 
 ---
