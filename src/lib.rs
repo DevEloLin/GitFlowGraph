@@ -164,11 +164,6 @@ fn platform_paths(
             format!("{BINARY_STEM}-darwin-arm64"),
             zed::DownloadedFileType::GzipTar,
         ),
-        (zed::Os::Mac, zed::Architecture::X8664) => (
-            format!("{BINARY_STEM}-darwin-x86_64.tar.gz"),
-            format!("{BINARY_STEM}-darwin-x86_64"),
-            zed::DownloadedFileType::GzipTar,
-        ),
         (zed::Os::Linux, zed::Architecture::X8664) => (
             format!("{BINARY_STEM}-linux-x86_64.tar.gz"),
             format!("{BINARY_STEM}-linux-x86_64"),
