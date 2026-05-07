@@ -1,0 +1,3 @@
+name = "GitFlowGraph"
+path_suffixes = ["gitflowgraph"]
+line_comments = ["# "]
