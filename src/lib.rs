@@ -4,7 +4,7 @@ use zed_extension_api::{self as zed, LanguageServerId, Result, SlashCommand, Sla
 const RUNTIME_VERSION: &str = "0.1.0";
 const RUNTIME_PORT: u16 = 9876;
 const BINARY_STEM: &str = "gitflowgraph";
-const GITHUB_REPO: &str = "gitflowgraph/gitflowgraph-core";
+const GITHUB_REPO: &str = "DevEloLin/GitFlowGraph";
 
 struct GitFlowGraphExtension;
 
