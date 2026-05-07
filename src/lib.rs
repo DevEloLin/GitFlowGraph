@@ -1,7 +1,7 @@
 use std::fs;
 use zed_extension_api::{self as zed, LanguageServerId, Result, SlashCommand, SlashCommandOutput};
 
-const RUNTIME_VERSION: &str = "0.1.0";
+const RUNTIME_VERSION: &str = "0.1.0-beta.1";
 const RUNTIME_PORT: u16 = 9876;
 const BINARY_STEM: &str = "gitflowgraph";
 const GITHUB_REPO: &str = "DevEloLin/GitFlowGraph";
@@ -112,8 +112,6 @@ impl GitFlowGraphExtension {
             &zed::LanguageServerInstallationStatus::Downloading,
         );
 
-        // Use the GitHub release API to resolve the asset download URL.
-        // This avoids hardcoding URLs and validates the asset exists in the release.
         let release = zed::github_release_by_tag_name(
             GITHUB_REPO,
             &format!("v{RUNTIME_VERSION}"),
@@ -137,9 +135,8 @@ impl GitFlowGraphExtension {
                 )
             })?;
 
-        zed::download_file(&asset.download_url, &local_dir, file_type).map_err(|e| {
-            format!("GitFlowGraph: download of `{asset_name}` failed — {e}.")
-        })?;
+        zed::download_file(&asset.download_url, &local_dir, file_type)
+            .map_err(|e| format!("GitFlowGraph: download of `{asset_name}` failed — {e}."))?;
 
         zed::make_file_executable(&local_binary)
             .map_err(|e| format!("GitFlowGraph: failed to make binary executable — {e}"))?;
