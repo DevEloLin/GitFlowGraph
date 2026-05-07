@@ -4,7 +4,7 @@ description = "Modern Git Graph & Smart Diff Workspace for Zed. Visualize branch
 version = "0.1.0"
 schema_version = 1
 authors = ["GitFlowGraph Team <team@gitflowgraph.dev>"]
-repository = "https://github.com/gitflowgraph/gitflowgraph"
+repository = "https://github.com/DevEloLin/GitFlowGraph"
 
 [language_servers.gitflowgraph]
 name = "GitFlowGraph Runtime"

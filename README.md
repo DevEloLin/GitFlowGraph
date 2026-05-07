@@ -9,9 +9,9 @@
 Understand your entire codebase history — commits, branches, diffs, and releases — without leaving your editor.
 
 [![Zed Extension](https://img.shields.io/badge/Zed-Extension-1f6feb?labelColor=0d1117)](https://zed.dev/extensions?q=gitflowgraph)
-[![Version](https://img.shields.io/badge/version-0.1.0-238636?labelColor=0d1117)](https://github.com/gitflowgraph/gitflowgraph/releases)
+[![Version](https://img.shields.io/badge/version-0.1.0-238636?labelColor=0d1117)](https://github.com/DevEloLin/GitFlowGraph/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-1f6feb?labelColor=0d1117)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-6e7681?labelColor=0d1117)](https://github.com/gitflowgraph/gitflowgraph/releases)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-6e7681?labelColor=0d1117)](https://github.com/DevEloLin/GitFlowGraph/releases)
 
 <br/>
 
@@ -169,7 +169,7 @@ The runtime binary (~15 MB) downloads automatically on first use.
 ### Manual / Dev Mode
 
 ```bash
-git clone https://github.com/gitflowgraph/gitflowgraph
+git clone https://github.com/DevEloLin/GitFlowGraph
 cd gitflowgraph
 zed --install-extension .
 ```
@@ -237,8 +237,8 @@ Open **http://localhost:9876** → navigate to the **License** tab.
 
 | Component | Repo | License |
 |-----------|------|---------|
-| Zed extension wrapper | `gitflowgraph/gitflowgraph` *(this repo)* | MIT |
-| Core runtime binary | `gitflowgraph/gitflowgraph-core` | Proprietary |
+| Zed extension wrapper | `DevEloLin/GitFlowGraph` *(this repo)* | MIT |
+| Core runtime binary | `DevEloLin/GitFlowGraph-core` | Proprietary |
 
 This split keeps the Zed marketplace integration fully auditable while protecting the core algorithms.
 
@@ -257,7 +257,7 @@ This split keeps the Zed marketplace integration fully auditable while protectin
 The extension wrapper (`src/`) is MIT-licensed and contributions are welcome.
 
 ```bash
-git clone https://github.com/gitflowgraph/gitflowgraph
+git clone https://github.com/DevEloLin/GitFlowGraph
 cd gitflowgraph
 cargo build
 ```
@@ -270,7 +270,7 @@ Please open an issue before submitting large changes.
 
 | | Channel |
 |---|---------|
-| 🐛 | [GitHub Issues](https://github.com/gitflowgraph/gitflowgraph/issues) — bugs & feature requests |
+| 🐛 | [GitHub Issues](https://github.com/DevEloLin/GitFlowGraph/issues) — bugs & feature requests |
 | 💳 | team@gitflowgraph.dev — license & billing |
 | 🌐 | [gitflowgraph.dev](https://gitflowgraph.dev) — website & docs |
 
