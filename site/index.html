@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitFlowGraph — Git visualization for Zed</title>
+  <meta name="description" content="Interactive Git graph, Smart Diff for YAML/JSON/Terraform, Release Flow, and Cross-Repo Timeline — all inside Zed." />
+  <meta property="og:title" content="GitFlowGraph" />
+  <meta property="og:description" content="The Git visualization workspace built for Zed." />
+  <meta property="og:image" content="assets/og.png" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Nav ────────────────────────────────────────────────────────────── -->
+  <header class="nav">
+    <div class="nav-inner container">
+      <a href="/" class="nav-logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" rx="7" fill="#1f6feb"/>
+          <circle cx="8"  cy="14" r="2.5" fill="#fff"/>
+          <circle cx="14" cy="8"  r="2.5" fill="#58a6ff"/>
+          <circle cx="20" cy="14" r="2.5" fill="#3fb950"/>
+          <circle cx="14" cy="20" r="2.5" fill="#d29922"/>
+          <line x1="8"  y1="14" x2="14" y2="8"  stroke="#58a6ff" stroke-width="1.5" opacity="0.6"/>
+          <line x1="14" y1="8"  x2="20" y2="14" stroke="#3fb950" stroke-width="1.5" opacity="0.6"/>
+          <line x1="8"  y1="14" x2="14" y2="20" stroke="#d29922" stroke-width="1.5" opacity="0.6"/>
+          <line x1="20" y1="14" x2="14" y2="20" stroke="#d29922" stroke-width="1.5" opacity="0.6"/>
+        </svg>
+        <span>GitFlowGraph</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="https://github.com/DevEloLin/GitFlowGraph" target="_blank">GitHub</a>
+      </nav>
+      <a href="#install" class="btn btn-sm">Install Free</a>
+    </div>
+  </header>
+
+  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="badge">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="#58a6ff"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg>
+        Zed Extension
+      </div>
+      <h1>
+        Understand your Git history<br/>
+        <span class="gradient-text">without leaving Zed</span>
+      </h1>
+      <p class="hero-sub">
+        Interactive commit graph, semantic diff for YAML &amp; Terraform,<br class="br-lg"/>
+        release tracking, and cross-repo timelines — all in one panel.
+      </p>
+      <div class="hero-actions">
+        <a href="#install" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.97a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.779a.749.749 0 1 1 1.06-1.06l1.97 1.97Z"/></svg>
+          Install in Zed — Free
+        </a>
+        <a href="https://github.com/DevEloLin/GitFlowGraph" class="btn btn-ghost" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+      <div class="hero-screenshot">
+        <div class="screenshot-chrome">
+          <div class="chrome-dots"><span></span><span></span><span></span></div>
+          <div class="chrome-bar"><span class="chrome-url">localhost:9876</span></div>
+        </div>
+        <img src="assets/screenshot-graph.png" alt="GitFlowGraph commit graph" class="screenshot-img" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Strip ─────────────────────────────────────────────────────────── -->
+  <div class="strip">
+    <div class="container strip-inner">
+      <span class="strip-label">Works with</span>
+      <span class="pill">YAML</span>
+      <span class="pill">JSON</span>
+      <span class="pill">Terraform / HCL</span>
+      <span class="pill">Monorepos</span>
+      <span class="pill">Multi-repo</span>
+      <span class="sep">·</span>
+      <span class="strip-label">Runs 100% locally &nbsp;·&nbsp; Zero telemetry</span>
+    </div>
+  </div>
+
+  <!-- ── Features ──────────────────────────────────────────────────────── -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>Everything you need to understand your Git history</h2>
+        <p>Built for engineers who live in their editor and want answers, not context-switching.</p>
+      </div>
+
+      <!-- Git Graph -->
+      <div class="feature-block">
+        <div class="feature-text">
+          <h3>Git Commit Graph</h3>
+          <p>Visualize your entire history as an interactive graph with color-coded branch lanes, merge-edge Bézier curves, and a glowing HEAD indicator.</p>
+          <ul class="feature-list">
+            <li>Color-coded lane per branch with SVG edge curves</li>
+            <li>Inline branch &amp; tag pill badges on every commit</li>
+            <li>Filter by keyword, regex, author, date range, or file path</li>
+            <li>Right-click menu: checkout, branch, tag, cherry-pick, reset</li>
+          </ul>
+        </div>
+        <div class="feature-visual placeholder">
+          <img src="assets/screenshot-graph-detail.png" alt="Git Graph" onerror="this.style.display='none'" />
+          <div class="placeholder-inner">
+            <svg width="40" height="40" viewBox="0 0 28 28" fill="none" opacity="0.3">
+              <circle cx="8"  cy="14" r="3" fill="#58a6ff"/>
+              <circle cx="14" cy="8"  r="3" fill="#3fb950"/>
+              <circle cx="20" cy="14" r="3" fill="#d29922"/>
+              <circle cx="14" cy="20" r="3" fill="#f85149"/>
+              <line x1="8" y1="14" x2="14" y2="8"  stroke="#58a6ff" stroke-width="2"/>
+              <line x1="14" y1="8" x2="20" y2="14" stroke="#3fb950" stroke-width="2"/>
+              <line x1="8" y1="14" x2="14" y2="20" stroke="#d29922" stroke-width="2"/>
+            </svg>
+            <span>Git Graph screenshot</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Smart Diff -->
+      <div class="feature-block reverse">
+        <div class="feature-text">
+          <h3>Smart Diff</h3>
+          <p>Stop reading wall-of-text diffs. Smart Diff understands the <em>shape</em> of your config files and reports what logically changed — with full structural paths.</p>
+          <div class="code-demo">
+            <div class="code-line modified"><span class="code-op mod">~</span><span class="code-path">spec.template.containers[0].image</span></div>
+            <div class="code-line modified sub"><span class="code-op"></span><span class="code-val">nginx:1.24 <span class="arrow">→</span> nginx:1.25</span></div>
+            <div class="code-line added"><span class="code-op add">+</span><span class="code-path">spec.template.containers[0].resources.limits.memory</span></div>
+            <div class="code-line added sub"><span class="code-op"></span><span class="code-val">128Mi</span></div>
+            <div class="code-line removed"><span class="code-op rem">−</span><span class="code-path">data.config.legacy_mode</span></div>
+          </div>
+          <div class="format-pills">
+            <span>YAML</span><span>JSON</span><span>Terraform</span><span>HCL</span>
+          </div>
+        </div>
+        <div class="feature-visual placeholder">
+          <img src="assets/screenshot-smartdiff.png" alt="Smart Diff" onerror="this.style.display='none'" />
+          <div class="placeholder-inner">
+            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3">
+              <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0Z" fill="#1f6feb"/>
+              <path d="M4 5h8M4 8h6M4 11h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span>Smart Diff screenshot</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Release Flow -->
+      <div class="feature-block">
+        <div class="feature-text">
+          <h3>Release Flow</h3>
+          <p>Pick any two refs and instantly see what's in-flight between your environments — with a one-click Markdown changelog.</p>
+          <ul class="feature-list">
+            <li>Compare any branch, tag, or commit SHA</li>
+            <li>Chronological commit list between the two refs</li>
+            <li>Auto-generated changelog grouped by conventional commit type</li>
+            <li>Hotfix detection for cherry-picked commits</li>
+          </ul>
+        </div>
+        <div class="feature-visual placeholder">
+          <img src="assets/screenshot-release.png" alt="Release Flow" onerror="this.style.display='none'" />
+          <div class="placeholder-inner">
+            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3">
+              <path d="M1 8h14M8 1l7 7-7 7" stroke="#3fb950" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Release Flow screenshot</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="feature-block reverse">
+        <div class="feature-text">
+          <h3>Cross-Repo Timeline</h3>
+          <p>One scrollable timeline of commits across all your repositories. Stop switching terminals to understand what shipped when.</p>
+          <ul class="feature-list">
+            <li>Up to 5 repositories in one unified workspace</li>
+            <li>All commits merged into a single chronological view</li>
+            <li>Author and keyword search across all repos simultaneously</li>
+            <li><kbd>⌘1</kbd> <kbd>⌘2</kbd> <kbd>⌘3</kbd> to switch the active repo</li>
+          </ul>
+        </div>
+        <div class="feature-visual placeholder">
+          <img src="assets/screenshot-timeline.png" alt="Cross-Repo Timeline" onerror="this.style.display='none'" />
+          <div class="placeholder-inner">
+            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3">
+              <path d="M1 4h14M1 8h14M1 12h14" stroke="#58a6ff" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span>Timeline screenshot</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Install ───────────────────────────────────────────────────────── -->
+  <section class="install" id="install">
+    <div class="container">
+      <div class="section-header">
+        <h2>Get started in 30 seconds</h2>
+      </div>
+      <div class="install-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Open Zed Extensions</h4>
+            <p>Press <kbd>⌘⇧X</kbd> to open the Extensions panel.</p>
+          </div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Search GitFlowGraph</h4>
+            <p>Type <strong>GitFlowGraph</strong> and click <strong>Install</strong>.</p>
+          </div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Launch</h4>
+            <p>Type <code>/gitflowgraph</code> in the AI panel, then open <code>localhost:9876</code>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Privacy ───────────────────────────────────────────────────────── -->
+  <div class="privacy-strip">
+    <div class="container privacy-inner">
+      <div class="privacy-item">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
+        Runs 100% locally
+      </div>
+      <div class="privacy-item">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
+        No data leaves your machine
+      </div>
+      <div class="privacy-item">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
+        Zero telemetry
+      </div>
+      <div class="privacy-item">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
+        Open source extension
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer ────────────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="nav-logo">
+          <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="7" fill="#1f6feb"/>
+            <circle cx="8"  cy="14" r="2.5" fill="#fff"/>
+            <circle cx="14" cy="8"  r="2.5" fill="#58a6ff"/>
+            <circle cx="20" cy="14" r="2.5" fill="#3fb950"/>
+            <circle cx="14" cy="20" r="2.5" fill="#d29922"/>
+            <line x1="8"  y1="14" x2="14" y2="8"  stroke="#58a6ff" stroke-width="1.5" opacity="0.6"/>
+            <line x1="14" y1="8"  x2="20" y2="14" stroke="#3fb950" stroke-width="1.5" opacity="0.6"/>
+            <line x1="8"  y1="14" x2="14" y2="20" stroke="#d29922" stroke-width="1.5" opacity="0.6"/>
+            <line x1="20" y1="14" x2="14" y2="20" stroke="#d29922" stroke-width="1.5" opacity="0.6"/>
+          </svg>
+          <span>GitFlowGraph</span>
+        </a>
+        <p>Git visualization for Zed</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h5>Product</h5>
+          <a href="#features">Features</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="#install">Install</a>
+        </div>
+        <div class="footer-col">
+          <h5>Resources</h5>
+          <a href="https://github.com/DevEloLin/GitFlowGraph" target="_blank">GitHub</a>
+          <a href="https://github.com/DevEloLin/GitFlowGraph/issues" target="_blank">Issues</a>
+          <a href="https://zed.dev/extensions?q=gitflowgraph" target="_blank">Zed Marketplace</a>
+        </div>
+        <div class="footer-col">
+          <h5>Legal</h5>
+          <a href="/terms">Terms</a>
+          <a href="/privacy">Privacy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <span>© 2025 GitFlowGraph. MIT license for the Zed extension wrapper.</span>
+        <span>team@gitflowgraph.dev</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
