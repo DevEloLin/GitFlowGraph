@@ -214,22 +214,36 @@ zed --install-extension .
 
 ---
 
-## 一键启动 / 快捷键
+## 在 Zed 里使用（首选方式）
 
-Zed 扩展 API 目前不开放给扩展自定义状态栏图标。最接近"一键启动按钮"的方案是**用 Zed 的 task 系统 + keymap**：
+Zed 扩展 API 暂不开放 webview / 自定义面板给扩展（公开能力只有 LSP / slash commands / themes / languages / debug adapters / context servers）。**主路径**是用 slash command 把数据"取回 Zed Assistant 面板"作为富 Markdown 渲染 — 表格、代码块、链接、徽章都能正确显示。
 
-1. 把 [`examples/tasks.json`](examples/tasks.json) 的内容追加到 `~/.config/zed/tasks.json`
-2. 把 [`examples/keymap.json`](examples/keymap.json) 的内容追加到 `~/.config/zed/keymap.json`
+打开 Zed 的 **Assistant** 面板（`⌘?`），输入 `/gitflowgraph` 系列命令：
 
-完成后：
+| 命令 | 用途 |
+|---|---|
+| `/gitflowgraph` | 概览 — 授权状态、工作树摘要、最近 5 笔提交、其他 slash 命令的入口 |
+| `/gitflowgraph-status` | 工作树状态：暂存/未暂存/未跟踪文件全列出 |
+| `/gitflowgraph-graph 20` | 最近 N 笔提交（默认 20），含分支和 tag 标注，HEAD 高亮 |
+| `/gitflowgraph-diff <ref>` 或 `<from>..<to>` | Smart Diff：文件清单 + 行数统计 |
+| `/gitflowgraph-changelog <from>..<to>` | 自动生成的 release changelog |
+| `/gitflowgraph-risk <from>..<to>` | 发布风险评分 + 高风险文件清单 |
+
+这些命令直接调本地 runtime API（`http://localhost:9876/api/...`）拉数据，不需要切换到浏览器。运行时在你打开 Git 项目时由 Zed 自动启动。
+
+> 提示：Pro / Trial 用户能拿到完整能力（changelog / risk / 5,000 提交历史）；Free 用户的 `/gitflowgraph-graph` 上限 500 条，会显示 "activate Pro for unlimited history"。
+
+### 完整交互式 UI（备选）
+
+需要泳道图、Hotfix Wizard、可视化 release launchpad、并排 diff 等富 UI 功能时，访问 **http://localhost:9876**。
+
+把 [`examples/tasks.json`](examples/tasks.json) + [`examples/keymap.json`](examples/keymap.json) 内容追加到 `~/.config/zed/{tasks,keymap}.json` 后，可一键调起浏览器：
 
 | 快捷键 | 行为 |
 |---|---|
 | `⌘⇧G` | 在浏览器打开 GitFlowGraph 主面板 |
 | `⌘⇧D` | 直接打开 Smart Diff 标签 |
 | `⌘⇧R` | 直接打开 Release 标签 |
-
-也可以用 `⌘⇧P` → "task: spawn" → "GitFlowGraph: Launch" 不绑定快捷键直接调用。运行时本身在你打开 Git 项目时会被 Zed 自动启动；这些 task 只是把面板带到前台。
 
 ---
 
