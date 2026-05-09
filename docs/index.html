@@ -1,26 +1,44 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en" data-i18n-title="meta.title">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GitFlowGraph — Zed 的 Git 可视化工作区</title>
-  <meta name="description" content="交互式提交图谱、Smart Diff（开发 / 发布 / 工作流）、发布管理、Hotfix 向导 — 全部内嵌于 Zed 编辑器。" />
-  <meta property="og:title" content="GitFlowGraph" />
-  <meta property="og:description" content="专为 Zed 打造的 Git 可视化工作区。" />
+  <title>GitFlowGraph — Release-Ready Git Workspace for Zed</title>
+  <meta name="description" content="Interactive commit graph, semantic Smart Diff, release management and Hotfix Wizard — all embedded in Zed." data-i18n-content="meta.description" />
+  <meta property="og:title" content="GitFlowGraph — Release-Ready Git Workspace for Zed" data-i18n-content="meta.title" />
+  <meta property="og:description" content="Interactive commit graph, semantic Smart Diff, release management and Hotfix Wizard — all embedded in Zed." data-i18n-content="meta.description" />
   <meta property="og:image" content="assets/og.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GitFlowGraph — Release-Ready Git Workspace for Zed" data-i18n-content="meta.title" />
+  <meta name="twitter:description" content="Interactive commit graph, semantic Smart Diff, release management and Hotfix Wizard — all embedded in Zed." data-i18n-content="meta.description" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="alternate icon" href="data:image/svg+xml;utf8,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 28 28%22&gt;&lt;rect width=%2228%22 height=%2228%22 rx=%227%22 fill=%22%231f6feb%22/&gt;&lt;circle cx=%228%22 cy=%2214%22 r=%222.5%22 fill=%22%23fff%22/&gt;&lt;circle cx=%2214%22 cy=%228%22 r=%222.5%22 fill=%22%2358a6ff%22/&gt;&lt;circle cx=%2220%22 cy=%2214%22 r=%222.5%22 fill=%22%233fb950%22/&gt;&lt;circle cx=%2214%22 cy=%2220%22 r=%222.5%22 fill=%22%23d29922%22/&gt;&lt;/svg&gt;" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    // Set <html lang> before first paint to avoid an EN→ZH flash when the
+    // user's saved preference is Chinese. The full applyLang() runs later.
+    (function () {
+      try {
+        var saved = localStorage.getItem('gitflowgraph.lang');
+        if (saved === 'zh') {
+          document.documentElement.setAttribute('lang', 'zh-CN');
+          document.documentElement.classList.add('lang-pending-zh');
+        }
+      } catch (_) { /* localStorage unavailable — fall through */ }
+    })();
+  </script>
 </head>
 <body>
 
   <!-- ── Nav ────────────────────────────────────────────────────────────── -->
   <header class="nav">
     <div class="nav-inner container">
-      <a href="/" class="nav-logo">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <a href="index.html" class="nav-logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
           <rect width="28" height="28" rx="7" fill="#1f6feb"/>
           <circle cx="8"  cy="14" r="2.5" fill="#fff"/>
           <circle cx="14" cy="8"  r="2.5" fill="#58a6ff"/>
@@ -33,12 +51,28 @@
         </svg>
         <span>GitFlowGraph</span>
       </a>
-      <nav class="nav-links">
-        <a href="#features">功能</a>
-        <a href="pricing.html">定价</a>
-        <a href="https://github.com/DevEloLin/GitFlowGraph" target="_blank">GitHub</a>
+      <nav class="nav-links" id="primary-nav" data-i18n-attr="aria-label:nav.menuLabel" aria-label="Primary">
+        <a href="#features" data-i18n="nav.features">Features</a>
+        <a href="pricing.html" data-i18n="nav.pricing">Pricing</a>
+        <a href="https://github.com/DevEloLin/GitFlowGraph#readme" target="_blank" rel="noopener" data-i18n="nav.docs">Docs</a>
+        <a href="https://github.com/DevEloLin/GitFlowGraph" target="_blank" rel="noopener" data-i18n="nav.github">GitHub</a>
       </nav>
-      <a href="#install" class="btn btn-sm">免费安装</a>
+      <div class="lang-switch" role="group" data-i18n-attr="aria-label:nav.langLabel" aria-label="Language">
+        <button type="button" data-lang-switch="en" class="lang-active" aria-pressed="true" data-i18n="nav.lang.en">EN</button>
+        <button type="button" data-lang-switch="zh" aria-pressed="false" data-i18n="nav.lang.zh">中文</button>
+      </div>
+      <a href="#install" class="btn btn-sm nav-cta" data-i18n="nav.installFree">Install Free</a>
+      <button
+        type="button"
+        class="nav-toggle"
+        aria-controls="primary-nav"
+        aria-expanded="false"
+        data-i18n-attr="aria-label:nav.toggleLabel"
+        aria-label="Open menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
     </div>
   </header>
 
@@ -46,33 +80,122 @@
   <section class="hero">
     <div class="container hero-inner">
       <div class="badge">
-        <svg width="12" height="12" viewBox="0 0 16 16" fill="#58a6ff"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg>
-        Zed Extension
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="#58a6ff" aria-hidden="true"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg>
+        <span data-i18n="hero.badge">Zed Extension · Release-ready</span>
       </div>
       <h1>
-        在 Zed 内完整掌握<br/>
-        <span class="gradient-text">你的 Git 历史</span>
+        <span data-i18n="hero.title">Master your Git history</span><br/>
+        <span class="gradient-text" data-i18n="hero.titleHighlight">inside Zed</span>
       </h1>
-      <p class="hero-sub">
-        交互式提交图谱、语义化 Smart Diff、发布管理与 Hotfix 向导<br class="br-lg"/>
-        — 全部内嵌于 Zed，无需离开编辑器。
+      <p class="hero-sub" data-i18n="hero.sub">
+        Interactive commit graph, three-mode Smart Diff, release workspace and a guided Hotfix Wizard — all embedded in Zed. No editor switching, no cloud, ever.
       </p>
       <div class="hero-actions">
         <a href="#install" class="btn btn-primary">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.97a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.779a.749.749 0 1 1 1.06-1.06l1.97 1.97Z"/></svg>
-          在 Zed 中安装 — 免费
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.97a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.779a.749.749 0 1 1 1.06-1.06l1.97 1.97Z"/></svg>
+          <span data-i18n="hero.installBtn">Install in Zed — Free</span>
         </a>
-        <a href="https://github.com/DevEloLin/GitFlowGraph" class="btn btn-ghost" target="_blank">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-          在 GitHub 查看
+        <a href="https://github.com/DevEloLin/GitFlowGraph" class="btn btn-ghost" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          <span data-i18n="hero.githubBtn">View on GitHub</span>
         </a>
       </div>
       <div class="hero-screenshot">
         <div class="screenshot-chrome">
           <div class="chrome-dots"><span></span><span></span><span></span></div>
-          <div class="chrome-bar"><span class="chrome-url">localhost:9876</span></div>
+          <div class="chrome-bar"><span class="chrome-url" data-i18n="hero.chromeUrl">localhost:9876</span></div>
         </div>
-        <img src="assets/screenshot-graph.png" alt="GitFlowGraph 提交图谱" class="screenshot-img" />
+        <div class="hero-mock" aria-hidden="true">
+          <!-- SVG mock of a Git graph (renders even without a screenshot file) -->
+          <svg viewBox="0 0 900 460" width="100%" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="rowG" x1="0" x2="1">
+                <stop offset="0" stop-color="#161b22"/>
+                <stop offset="1" stop-color="#0d1117"/>
+              </linearGradient>
+              <radialGradient id="headGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0" stop-color="#58a6ff" stop-opacity=".95"/>
+                <stop offset="1" stop-color="#58a6ff" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="900" height="460" fill="#0d1117"/>
+            <!-- header strip -->
+            <rect x="0" y="0" width="900" height="36" fill="#161b22"/>
+            <rect x="16" y="11" width="64" height="14" rx="3" fill="#21262d"/>
+            <rect x="92" y="11" width="64" height="14" rx="3" fill="#1f6feb" opacity=".75"/>
+            <rect x="168" y="11" width="64" height="14" rx="3" fill="#21262d"/>
+            <rect x="244" y="11" width="64" height="14" rx="3" fill="#21262d"/>
+            <!-- lanes -->
+            <g stroke-width="2" fill="none" opacity=".85">
+              <path d="M40 60 V 410" stroke="#58a6ff"/>
+              <path d="M80 110 V 410" stroke="#bc8cff"/>
+              <path d="M120 200 V 360" stroke="#3fb950"/>
+              <path d="M160 260 V 410" stroke="#d29922"/>
+              <!-- merges -->
+              <path d="M80 160 C 80 130, 40 130, 40 100" stroke="#bc8cff"/>
+              <path d="M120 240 C 120 215, 80 215, 80 190" stroke="#3fb950"/>
+              <path d="M160 300 C 160 280, 120 280, 120 260" stroke="#d29922"/>
+            </g>
+            <!-- commit dots + glowing HEAD -->
+            <g>
+              <circle cx="40" cy="60" r="14" fill="url(#headGlow)"/>
+              <circle cx="40" cy="60" r="6" fill="#58a6ff" stroke="#fff" stroke-width="2"/>
+              <circle cx="40" cy="100" r="5" fill="#58a6ff"/>
+              <circle cx="80" cy="110" r="5" fill="#bc8cff"/>
+              <circle cx="80" cy="160" r="5" fill="#bc8cff"/>
+              <circle cx="80" cy="190" r="5" fill="#bc8cff"/>
+              <circle cx="120" cy="200" r="5" fill="#3fb950"/>
+              <circle cx="120" cy="240" r="5" fill="#3fb950"/>
+              <circle cx="120" cy="280" r="5" fill="#3fb950"/>
+              <circle cx="120" cy="320" r="5" fill="#3fb950"/>
+              <circle cx="160" cy="300" r="5" fill="#d29922"/>
+              <circle cx="160" cy="340" r="5" fill="#d29922"/>
+              <circle cx="160" cy="380" r="5" fill="#d29922"/>
+              <circle cx="40" cy="380" r="5" fill="#58a6ff"/>
+            </g>
+            <!-- rows / messages -->
+            <g font-family="Inter, sans-serif" font-size="12" fill="#e6edf3">
+              <!-- row 1 (HEAD) -->
+              <rect x="200" y="48" width="680" height="28" fill="#1f2a37" opacity=".55"/>
+              <rect x="216" y="55" width="46" height="14" rx="3" fill="#1f6feb"/>
+              <text x="222" y="65" font-size="10" font-weight="700" fill="#fff">HEAD</text>
+              <rect x="266" y="55" width="36" height="14" rx="3" fill="#3fb950"/>
+              <text x="271" y="65" font-size="10" font-weight="700" fill="#0d1117">main</text>
+              <text x="312" y="65" fill="#e6edf3">feat: launch release workspace</text>
+              <text x="800" y="65" fill="#8b949e" font-family="JetBrains Mono, monospace">a1b2c3d</text>
+              <!-- row 2 -->
+              <rect x="216" y="95" width="58" height="14" rx="3" fill="rgba(210,153,34,0.18)" stroke="#d29922" stroke-width="1"/>
+              <text x="225" y="105" font-size="10" font-weight="700" fill="#d29922">v1.3.0</text>
+              <text x="282" y="105" fill="#e6edf3">⬡ Production  release: cut v1.3.0</text>
+              <text x="800" y="105" fill="#8b949e" font-family="JetBrains Mono, monospace">d4e5f6a</text>
+              <!-- row 3 -->
+              <text x="216" y="145" fill="#e6edf3">fix: payment timeout on retry</text>
+              <text x="800" y="145" fill="#bc8cff" font-family="JetBrains Mono, monospace">7b8c9d0</text>
+              <!-- row 4 -->
+              <text x="216" y="185" fill="#e6edf3">⚠ chore(k8s): bump replica count to 4</text>
+              <text x="800" y="185" fill="#bc8cff" font-family="JetBrains Mono, monospace">2c4e6f8</text>
+              <!-- row 5 -->
+              <rect x="216" y="225" width="56" height="14" rx="3" fill="#3fb950"/>
+              <text x="223" y="235" font-size="10" font-weight="700" fill="#0d1117">staging</text>
+              <text x="280" y="235" fill="#e6edf3">feat: dashboard polish</text>
+              <text x="800" y="235" fill="#3fb950" font-family="JetBrains Mono, monospace">9a0b1c2</text>
+              <!-- row 6 -->
+              <text x="216" y="275" fill="#e6edf3">refactor: extract risk scoring</text>
+              <text x="800" y="275" fill="#3fb950" font-family="JetBrains Mono, monospace">3d4e5f6</text>
+              <!-- row 7 -->
+              <text x="216" y="315" fill="#e6edf3">⚠ terraform: rotate IAM policy</text>
+              <text x="800" y="315" fill="#3fb950" font-family="JetBrains Mono, monospace">5e6f7a8</text>
+              <!-- row 8 -->
+              <rect x="216" y="355" width="60" height="14" rx="3" fill="#d29922"/>
+              <text x="222" y="365" font-size="10" font-weight="700" fill="#0d1117">develop</text>
+              <text x="284" y="365" fill="#e6edf3">docs: bootstrap Workflow diff guide</text>
+              <text x="800" y="365" fill="#d29922" font-family="JetBrains Mono, monospace">6f7a8b9</text>
+              <!-- row 9 -->
+              <text x="216" y="395" fill="#e6edf3">test: hotfix-sync edge cases</text>
+              <text x="800" y="395" fill="#58a6ff" font-family="JetBrains Mono, monospace">8c9d0e1</text>
+            </g>
+          </svg>
+        </div>
       </div>
     </div>
   </section>
@@ -80,14 +203,14 @@
   <!-- ── Strip ─────────────────────────────────────────────────────────── -->
   <div class="strip">
     <div class="container strip-inner">
-      <span class="strip-label">支持格式</span>
-      <span class="pill">YAML</span>
-      <span class="pill">JSON</span>
-      <span class="pill">Terraform / HCL</span>
-      <span class="pill">Kubernetes</span>
-      <span class="pill">GitHub Actions</span>
+      <span class="strip-label" data-i18n="strip.label">Smart Diff supports</span>
+      <span class="pill" data-i18n="strip.tag.yaml">YAML</span>
+      <span class="pill" data-i18n="strip.tag.json">JSON</span>
+      <span class="pill" data-i18n="strip.tag.tf">Terraform / HCL</span>
+      <span class="pill" data-i18n="strip.tag.k8s">Kubernetes</span>
+      <span class="pill" data-i18n="strip.tag.gha">GitHub Actions</span>
       <span class="sep">·</span>
-      <span class="strip-label">100% 本地运行 &nbsp;·&nbsp; 零遥测</span>
+      <span class="strip-label" data-i18n="strip.runtime">100% local · zero telemetry</span>
     </div>
   </div>
 
@@ -95,28 +218,28 @@
   <section class="features" id="features">
     <div class="container">
       <div class="section-header">
-        <h2>完整掌握你的 Git 历史所需的一切</h2>
-        <p>为在编辑器中工作的工程师而生——要答案，不要上下文切换。</p>
+        <h2 data-i18n="features.heading">Everything you need to ship with confidence</h2>
+        <p data-i18n="features.sub">Built for engineers who live in the editor — answers, not context switches.</p>
       </div>
 
       <!-- Git Graph -->
       <div class="feature-block">
         <div class="feature-text">
-          <h3>Git 提交图谱</h3>
-          <p>以交互式多泳道图可视化完整历史，SVG 边缘曲线、发光 HEAD 指示器、环境徽章一应俱全。</p>
+          <h3 data-i18n="feat.graph.h">Git Commit Graph</h3>
+          <p data-i18n="feat.graph.lead">Render the full history as an interactive multi-lane graph: SVG curves, glowing HEAD ring, branch / tag / environment badges.</p>
           <ul class="feature-list">
-            <li>每分支独立颜色，贝塞尔曲线连接合并边</li>
-            <li>提交内联显示分支 &amp; Tag 胶囊标签</li>
-            <li>⬡ 环境部署徽章标记已上线提交</li>
-            <li>⚠️ 自动识别 infra / terraform / helm 类提交</li>
-            <li>关键字、正则、作者、分支、日期范围、文件路径多维过滤</li>
-            <li>右键菜单：Checkout、新建分支、Cherry-pick、Reset 等</li>
+            <li data-i18n-html="feat.graph.l1">Per-branch lane colors with Bézier-curve merge edges</li>
+            <li data-i18n-html="feat.graph.l2">Inline branch &amp; tag pills, environment hex badges (⬡)</li>
+            <li data-i18n-html="feat.graph.l3">⚠ marker on infra / terraform / helm / k8s commits</li>
+            <li data-i18n-html="feat.graph.l4">Filters: keyword, regex, author, branch, date range, path</li>
+            <li data-i18n-html="feat.graph.l5">Filter Presets — save and reload any combination (Pro)</li>
+            <li data-i18n-html="feat.graph.l6">History limit: 500 commits (Free) · 5,000 (Pro)</li>
           </ul>
         </div>
         <div class="feature-visual placeholder">
-          <img src="assets/screenshot-graph-detail.png" alt="Git Graph" onerror="this.style.display='none'" />
+          <img src="assets/screenshot-graph-detail.png" data-i18n-attr="alt:feat.graph.imgAlt" alt="Git graph close-up" onerror="this.style.display='none'" />
           <div class="placeholder-inner">
-            <svg width="40" height="40" viewBox="0 0 28 28" fill="none" opacity="0.3">
+            <svg width="40" height="40" viewBox="0 0 28 28" fill="none" opacity="0.3" aria-hidden="true">
               <circle cx="8"  cy="14" r="3" fill="#58a6ff"/>
               <circle cx="14" cy="8"  r="3" fill="#3fb950"/>
               <circle cx="20" cy="14" r="3" fill="#d29922"/>
@@ -125,7 +248,7 @@
               <line x1="14" y1="8" x2="20" y2="14" stroke="#3fb950" stroke-width="2"/>
               <line x1="8" y1="14" x2="14" y2="20" stroke="#d29922" stroke-width="2"/>
             </svg>
-            <span>提交图谱截图</span>
+            <span data-i18n="feat.graph.placeholder">Commit graph preview</span>
           </div>
         </div>
       </div>
@@ -133,32 +256,55 @@
       <!-- Smart Diff -->
       <div class="feature-block reverse">
         <div class="feature-text">
-          <h3>Smart Diff — 三种上下文模式</h3>
-          <p>不再阅读纯文本差异墙。Smart Diff 理解文件的<em>结构</em>，精确汇报逻辑变更，并按工作上下文分为三种模式。</p>
+          <h3 data-i18n="feat.diff.h">Smart Diff — three context modes</h3>
+          <p data-i18n-html="feat.diff.lead">Stop reading walls of text. Smart Diff understands the <em>structure</em> of your files and reports what actually changed, grouped by the work you are doing.</p>
           <ul class="feature-list">
-            <li><strong>开发 Diff</strong> — 工作区、暂存区、最近提交、分支 vs 基准对比</li>
-            <li><strong>发布 Diff</strong> — 任意 Tag / 分支对比，结构化文件自动语义分析</li>
-            <li><strong>工作流 Diff</strong> — 自动筛选 CI/CD 文件，按 GitHub Actions / Docker / Terraform / K8s / Helm 分组</li>
+            <li data-i18n-html="feat.diff.l1"><strong>Development Diff</strong> — working tree, staged, last commit, vs origin/main, custom refs</li>
+            <li data-i18n-html="feat.diff.l2"><strong>Release Diff</strong> — any tag/branch pair, structured files trigger semantic analysis automatically</li>
+            <li data-i18n-html="feat.diff.l3"><strong>Workflow Diff</strong> — auto-filtered to CI/CD &amp; infra files, grouped by GitHub Actions / Docker / Terraform / K8s / Helm</li>
+            <li data-i18n-html="feat.diff.l4">Side-by-side viewer with synchronized scroll and intra-line character highlighting (Pro)</li>
           </ul>
           <div class="code-demo">
-            <div class="code-line modified"><span class="code-op mod">~</span><span class="code-path">spec.template.containers[0].image</span></div>
-            <div class="code-line modified sub"><span class="code-op"></span><span class="code-val">nginx:1.24 <span class="arrow">→</span> nginx:1.25</span></div>
-            <div class="code-line added"><span class="code-op add">+</span><span class="code-path">spec.template.containers[0].resources.limits.memory</span></div>
-            <div class="code-line added sub"><span class="code-op"></span><span class="code-val">128Mi</span></div>
-            <div class="code-line removed"><span class="code-op rem">−</span><span class="code-path">data.config.legacy_mode</span></div>
+            <div class="code-line modified">
+              <span class="code-op mod">~</span>
+              <span class="code-path" data-i18n="feat.diff.codePath1">spec.template.containers[0].image</span>
+            </div>
+            <div class="code-line modified sub">
+              <span class="code-op"></span>
+              <span class="code-val">
+                <span data-i18n="feat.diff.codeVal1">nginx:1.24</span>
+                <span class="arrow">→</span>
+                <span data-i18n="feat.diff.codeVal1To">nginx:1.25</span>
+              </span>
+            </div>
+            <div class="code-line added">
+              <span class="code-op add">+</span>
+              <span class="code-path" data-i18n="feat.diff.codePath2">spec.template.containers[0].resources.limits.memory</span>
+            </div>
+            <div class="code-line added sub">
+              <span class="code-op"></span>
+              <span class="code-val" data-i18n="feat.diff.codeVal2">128Mi</span>
+            </div>
+            <div class="code-line removed">
+              <span class="code-op rem">−</span>
+              <span class="code-path" data-i18n="feat.diff.codePath3">data.config.legacy_mode</span>
+            </div>
           </div>
           <div class="format-pills">
-            <span>YAML</span><span>JSON</span><span>Terraform</span><span>HCL</span>
+            <span data-i18n="strip.tag.yaml">YAML</span>
+            <span data-i18n="strip.tag.json">JSON</span>
+            <span data-i18n="strip.tag.terraform">Terraform</span>
+            <span data-i18n="strip.tag.hcl">HCL</span>
           </div>
         </div>
         <div class="feature-visual placeholder">
-          <img src="assets/screenshot-smartdiff.png" alt="Smart Diff" onerror="this.style.display='none'" />
+          <img src="assets/screenshot-smartdiff.png" data-i18n-attr="alt:feat.diff.imgAlt" alt="Smart Diff structural panel" onerror="this.style.display='none'" />
           <div class="placeholder-inner">
-            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3">
+            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3" aria-hidden="true">
               <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0Z" fill="#1f6feb"/>
               <path d="M4 5h8M4 8h6M4 11h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
-            <span>Smart Diff 截图</span>
+            <span data-i18n="feat.diff.placeholder">Smart Diff preview</span>
           </div>
         </div>
       </div>
@@ -166,71 +312,152 @@
       <!-- Commit Detail -->
       <div class="feature-block">
         <div class="feature-text">
-          <h3>提交详情 &amp; Diff 查看器</h3>
-          <p>点击任意提交，无需跳转，直接在侧边面板查看完整变更详情。</p>
+          <h3 data-i18n-html="feat.detail.h">Commit Detail &amp; Diff Viewer</h3>
+          <p data-i18n="feat.detail.lead">Click any commit to see full metadata, change list and diff in a side panel — never leave the graph.</p>
           <ul class="feature-list">
-            <li>可折叠目录树，含 A / M / D / R 状态徽章及增减行数</li>
-            <li>统一 Diff — 经典 +/- 行差异，token 级着色</li>
-            <li>左右并排 Diff — 字符级行内高亮，双栏同步滚动</li>
-            <li>文件历史 — 查看选中文件被修改的所有提交</li>
-            <li>二进制文件检测，优雅提示而非乱码</li>
+            <li data-i18n-html="feat.detail.l1">Collapsible file tree with A / M / D / R badges and +/− line counts</li>
+            <li data-i18n-html="feat.detail.l2">Unified diff with token-level coloring</li>
+            <li data-i18n-html="feat.detail.l3">Side-by-side diff with synced scroll &amp; character-level highlights (Pro)</li>
+            <li data-i18n-html="feat.detail.l4">Per-file Smart toggle for YAML / JSON / Terraform (Pro)</li>
+            <li data-i18n-html="feat.detail.l5">Binary file detection — clean message, never garbled bytes</li>
           </ul>
         </div>
         <div class="feature-visual placeholder">
-          <img src="assets/screenshot-diff.png" alt="提交详情" onerror="this.style.display='none'" />
+          <img src="assets/screenshot-diff.png" data-i18n-attr="alt:feat.detail.imgAlt" alt="Commit detail panel" onerror="this.style.display='none'" />
           <div class="placeholder-inner">
-            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3">
+            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3" aria-hidden="true">
               <path d="M2 2h12v12H2z" stroke="#58a6ff" stroke-width="1.5"/>
               <path d="M5 6h6M5 9h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
-            <span>提交详情截图</span>
+            <span data-i18n="feat.detail.placeholder">Commit detail preview</span>
           </div>
         </div>
       </div>
 
-      <!-- Release -->
+      <!-- Release Workspace -->
       <div class="feature-block reverse">
         <div class="feature-text">
-          <h3>发布管理</h3>
-          <p>从 Git 历史直接提取发布情报，无需任何外部集成。</p>
+          <span class="feature-tag pro" data-i18n="feat.timeline.proTag">Pro</span>
+          <h3 data-i18n="feat.release.h">Release Workspace</h3>
+          <p data-i18n="feat.release.lead">A six-tab dashboard built from your Git history alone — no external integrations needed.</p>
           <ul class="feature-list">
-            <li><strong>变更日志</strong> — 对比任意两 ref，自动生成 Breaking / Feature / Fix / Infra 分类日志，支持 Markdown 导出</li>
-            <li><strong>发布风险评分</strong> — 0–100 评分，文件级风险因素明细</li>
-            <li><strong>Actions</strong> — Hotfix 分支同步状态检查，无发布说明 Tag 检测</li>
-            <li><strong>Environments</strong> — 环境流水线网格，实时显示各环境领先 / 落后提交数</li>
-            <li><strong>速度仪表板</strong> — 发布频率、Hotfix 占比、平均提交数等指标</li>
-            <li><strong>Hotfix 向导</strong> — 4 步引导式紧急修复工作流，含脚本预览和一键执行</li>
+            <li data-i18n-html="feat.release.l1"><strong>Launchpad</strong> — one-click pre-flight check with status banner, risk score, sync table and a Markdown export (Pro)</li>
+            <li data-i18n-html="feat.release.l2"><strong>Changelog</strong> — compare any two refs, classify by Conventional Commits, copy as Markdown (generation Pro)</li>
+            <li data-i18n-html="feat.release.l3"><strong>Actions</strong> — hotfix sync detector across main/develop/master, lightweight-tag warnings (Pro)</li>
+            <li data-i18n-html="feat.release.l4"><strong>Environments</strong> — pipeline grid with adjacent-pair ahead/behind, env hex badges in the graph (Pro)</li>
+            <li data-i18n-html="feat.release.l5"><strong>Velocity</strong> — release frequency, hotfix rate, avg commits per release, scrollable history table (Pro)</li>
+            <li data-i18n-html="feat.release.l6"><strong>Hotfix Wizard</strong> — 4-step guided flow: pick prod ref → name branch → cherry-pick → execute &amp; sync-check (Pro)</li>
           </ul>
         </div>
         <div class="feature-visual placeholder">
-          <img src="assets/screenshot-release.png" alt="发布管理" onerror="this.style.display='none'" />
+          <img src="assets/screenshot-release.png" data-i18n-attr="alt:feat.release.imgAlt" alt="Release workspace" onerror="this.style.display='none'" />
           <div class="placeholder-inner">
-            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3">
+            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3" aria-hidden="true">
               <path d="M1 8h14M8 1l7 7-7 7" stroke="#3fb950" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span>发布管理截图</span>
+            <span data-i18n="feat.release.placeholder">Release dashboard preview</span>
           </div>
         </div>
       </div>
 
-      <!-- Worktrees -->
+      <!-- File Timeline -->
       <div class="feature-block">
         <div class="feature-text">
-          <h3>Worktrees &amp; 工作区档案</h3>
-          <p>在编辑器内管理 Git 工作树，快速切换多仓库上下文。</p>
+          <span class="feature-tag pro" data-i18n="feat.timeline.proTag">Pro</span>
+          <h3 data-i18n="feat.timeline.h">File Timeline</h3>
+          <p data-i18n="feat.timeline.lead">Type a file path. See every commit that touched it. Click any two commits — get the side-by-side diff for that exact pair.</p>
           <ul class="feature-list">
-            <li>列出所有工作树：路径、分支、HEAD、MAIN / LOCKED 状态</li>
-            <li>添加 / 删除工作树，无需离开编辑器</li>
-            <li>命名工作区配置档案，一键切换活跃仓库</li>
+            <li data-i18n-html="feat.timeline.l1">Per-file commit history with branch/tag annotations and "most recent" marker</li>
+            <li data-i18n-html="feat.timeline.l2">Optional release-range filter — scope the timeline to between two refs</li>
+            <li data-i18n-html="feat.timeline.l3">Auto-orders the two picks by commit timestamp — click in any order</li>
+            <li data-i18n-html="feat.timeline.l4">Jump to Timeline straight from any Smart Diff file (Pro)</li>
           </ul>
         </div>
         <div class="feature-visual placeholder">
-          <img src="assets/screenshot-worktrees.png" alt="Worktrees" onerror="this.style.display='none'" />
+          <img src="assets/screenshot-timeline.png" data-i18n-attr="alt:feat.timeline.imgAlt" alt="File timeline view" onerror="this.style.display='none'" />
           <div class="placeholder-inner">
-            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3">
+            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3" aria-hidden="true">
+              <circle cx="3" cy="3" r="1.5" fill="#58a6ff"/>
+              <circle cx="3" cy="8" r="1.5" fill="#bc8cff"/>
+              <circle cx="3" cy="13" r="1.5" fill="#3fb950"/>
+              <line x1="3" y1="3" x2="3" y2="13" stroke="#30363d" stroke-width="1"/>
+              <path d="M7 3h6M7 8h5M7 13h7" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            <span data-i18n="feat.timeline.placeholder">File timeline preview</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Multi-Repo -->
+      <div class="feature-block reverse">
+        <div class="feature-text">
+          <span class="feature-tag pro" data-i18n="feat.multirepo.proTag">Pro</span>
+          <h3 data-i18n="feat.multirepo.h">Multi-Repo Release View</h3>
+          <p data-i18n="feat.multirepo.lead">Run one runtime per repository, then aggregate ahead / behind across all of them in a single table. Built for microservices and split-repo releases.</p>
+          <ul class="feature-list">
+            <li data-i18n-html="feat.multirepo.l1">Add any number of endpoints — each pointing to a runtime + repo</li>
+            <li data-i18n-html="feat.multirepo.l2">Compare a base/head ref pair across every endpoint at once</li>
+            <li data-i18n-html="feat.multirepo.l3">Per-row status: ✓ ok · connected · ✗ error (one failure does not break the rest)</li>
+            <li data-i18n-html="feat.multirepo.l4">Endpoints persist in browser localStorage — re-open and the table is intact</li>
+          </ul>
+        </div>
+        <div class="feature-visual placeholder">
+          <img src="assets/screenshot-multirepo.png" data-i18n-attr="alt:feat.multirepo.imgAlt" alt="Multi-repo release view" onerror="this.style.display='none'" />
+          <div class="placeholder-inner">
+            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3" aria-hidden="true">
+              <rect x="2" y="2" width="5" height="5" rx="1" fill="#58a6ff"/>
+              <rect x="9" y="2" width="5" height="5" rx="1" fill="#3fb950"/>
+              <rect x="2" y="9" width="5" height="5" rx="1" fill="#d29922"/>
+              <rect x="9" y="9" width="5" height="5" rx="1" fill="#bc8cff"/>
+            </svg>
+            <span data-i18n="feat.multirepo.placeholder">Multi-repo preview</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Worktrees & Profiles -->
+      <div class="feature-block">
+        <div class="feature-text">
+          <h3 data-i18n-html="feat.wt.h">Worktrees &amp; Workspace Profiles</h3>
+          <p data-i18n="feat.wt.lead">Manage parallel checkouts and switch repository contexts in seconds — no terminal hopping, no stash juggling.</p>
+          <ul class="feature-list">
+            <li data-i18n-html="feat.wt.l1"><strong>Worktrees</strong> — list, add and remove linked worktrees (Pro). MAIN / LOCKED status badges</li>
+            <li data-i18n-html="feat.wt.l2"><strong>Workspace Profiles</strong> — name a folder once, reload as the active repo with a click</li>
+            <li data-i18n-html="feat.wt.l3">Branch-name validation enforces Git rules before any action runs</li>
+            <li data-i18n-html="feat.wt.l4">Active profile shown with a green indicator dot</li>
+          </ul>
+        </div>
+        <div class="feature-visual placeholder">
+          <img src="assets/screenshot-worktrees.png" data-i18n-attr="alt:feat.wt.imgAlt" alt="Worktrees panel" onerror="this.style.display='none'" />
+          <div class="placeholder-inner">
+            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3" aria-hidden="true">
               <path d="M2 4h12M2 8h8M2 12h10" stroke="#d29922" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
-            <span>Worktrees 截图</span>
+            <span data-i18n="feat.wt.placeholder">Worktrees preview</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Remotes & Credentials -->
+      <div class="feature-block reverse">
+        <div class="feature-text">
+          <h3 data-i18n-html="feat.remotes.h">Remotes &amp; Credentials</h3>
+          <p data-i18n="feat.remotes.lead">A first-class credential manager for hosted Git platforms — fetch and push without ever leaving the editor.</p>
+          <ul class="feature-list">
+            <li data-i18n-html="feat.remotes.l1">Auto-detected platform per remote — GitHub · GitLab · Self-hosted · Azure DevOps · Gitea</li>
+            <li data-i18n-html="feat.remotes.l2">PATs encrypted at rest with an HMAC-signed entry, masked in the UI</li>
+            <li data-i18n-html="feat.remotes.l3">One-click Fetch per remote · push uses the matching credential automatically</li>
+            <li data-i18n-html="feat.remotes.l4">Credential is never sent anywhere except the matching Git host</li>
+          </ul>
+        </div>
+        <div class="feature-visual placeholder">
+          <img src="assets/screenshot-remotes.png" data-i18n-attr="alt:feat.remotes.imgAlt" alt="Remotes panel" onerror="this.style.display='none'" />
+          <div class="placeholder-inner">
+            <svg width="36" height="36" viewBox="0 0 16 16" fill="none" opacity="0.3" aria-hidden="true">
+              <circle cx="8" cy="8" r="6" stroke="#58a6ff" stroke-width="1.5"/>
+              <path d="M2 8h12M8 2c2 2 2 10 0 12M8 2c-2 2-2 10 0 12" stroke="#58a6ff" stroke-width="1.2"/>
+            </svg>
+            <span data-i18n="feat.remotes.placeholder">Remotes preview</span>
           </div>
         </div>
       </div>
@@ -242,54 +469,54 @@
   <section class="install" id="install">
     <div class="container">
       <div class="section-header">
-        <h2>30 秒上手</h2>
+        <h2 data-i18n="install.heading">Up and running in 30 seconds</h2>
       </div>
       <div class="install-steps">
         <div class="step">
           <div class="step-num">1</div>
           <div class="step-body">
-            <h4>打开 Zed 插件市场</h4>
-            <p>按 <kbd>⌘⇧X</kbd> 打开 Extensions 面板。</p>
+            <h4 data-i18n="install.s1.title">Open Zed Extensions</h4>
+            <p data-i18n-html="install.s1.body">Press <kbd>⌘⇧X</kbd> (macOS) or <kbd>Ctrl+Shift+X</kbd> to open the Extensions panel.</p>
           </div>
         </div>
         <div class="step-arrow">→</div>
         <div class="step">
           <div class="step-num">2</div>
           <div class="step-body">
-            <h4>搜索 GitFlowGraph</h4>
-            <p>输入 <strong>GitFlowGraph</strong> 并点击 <strong>Install</strong>。</p>
+            <h4 data-i18n="install.s2.title">Search GitFlowGraph</h4>
+            <p data-i18n-html="install.s2.body">Type <strong>GitFlowGraph</strong> and click <strong>Install</strong>.</p>
           </div>
         </div>
         <div class="step-arrow">→</div>
         <div class="step">
           <div class="step-num">3</div>
           <div class="step-body">
-            <h4>启动</h4>
-            <p>在 AI 面板输入 <code>/gitflowgraph</code>，然后打开 <code>localhost:9876</code>。</p>
+            <h4 data-i18n="install.s3.title">Launch</h4>
+            <p data-i18n-html="install.s3.body">Run <code>/gitflowgraph</code> from the AI panel, then open <code>localhost:9876</code>.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── Privacy ───────────────────────────────────────────────────────── -->
+  <!-- ── Privacy strip ──────────────────────────────────────────────────── -->
   <div class="privacy-strip">
     <div class="container privacy-inner">
       <div class="privacy-item">
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
-        100% 本地运行
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
+        <span data-i18n="privacy.local">100% local</span>
       </div>
       <div class="privacy-item">
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
-        数据不离开你的机器
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
+        <span data-i18n="privacy.noLeave">Data never leaves your machine</span>
       </div>
       <div class="privacy-item">
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
-        零遥测
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
+        <span data-i18n="privacy.noTel">Zero telemetry</span>
       </div>
       <div class="privacy-item">
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
-        扩展本体开源（MIT）
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
+        <span data-i18n="privacy.openSource">MIT-licensed extension wrapper</span>
       </div>
     </div>
   </div>
@@ -298,8 +525,8 @@
   <footer class="footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <a href="/" class="nav-logo">
-          <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
+        <a href="index.html" class="nav-logo">
+          <svg width="22" height="22" viewBox="0 0 28 28" fill="none" aria-hidden="true">
             <rect width="28" height="28" rx="7" fill="#1f6feb"/>
             <circle cx="8"  cy="14" r="2.5" fill="#fff"/>
             <circle cx="14" cy="8"  r="2.5" fill="#58a6ff"/>
@@ -312,35 +539,43 @@
           </svg>
           <span>GitFlowGraph</span>
         </a>
-        <p>Zed 的 Git 可视化工作区</p>
+        <p data-i18n="footer.tagline">Release-ready Git workspace for Zed</p>
       </div>
       <div class="footer-links">
         <div class="footer-col">
-          <h5>产品</h5>
-          <a href="#features">功能</a>
-          <a href="pricing.html">定价</a>
-          <a href="#install">安装</a>
+          <h5 data-i18n="footer.product">Product</h5>
+          <a href="#features" data-i18n="footer.features">Features</a>
+          <a href="pricing.html" data-i18n="footer.pricing">Pricing</a>
+          <a href="#install" data-i18n="footer.install">Install</a>
         </div>
         <div class="footer-col">
-          <h5>资源</h5>
-          <a href="https://github.com/DevEloLin/GitFlowGraph" target="_blank">GitHub</a>
-          <a href="https://github.com/DevEloLin/GitFlowGraph/issues" target="_blank">Issues</a>
-          <a href="https://zed.dev/extensions?q=gitflowgraph" target="_blank">Zed 插件市场</a>
+          <h5 data-i18n="footer.resources">Resources</h5>
+          <a href="https://github.com/DevEloLin/GitFlowGraph#readme" target="_blank" rel="noopener" data-i18n="footer.docs">Documentation</a>
+          <a href="https://github.com/DevEloLin/GitFlowGraph" target="_blank" rel="noopener" data-i18n="footer.github">GitHub</a>
+          <a href="https://github.com/DevEloLin/GitFlowGraph/issues" target="_blank" rel="noopener" data-i18n="footer.issues">Issues</a>
+          <a href="https://zed.dev/extensions?q=gitflowgraph" target="_blank" rel="noopener" data-i18n="footer.marketplace">Zed Marketplace</a>
         </div>
         <div class="footer-col">
-          <h5>法律</h5>
-          <a href="/terms">服务条款</a>
-          <a href="/privacy">隐私政策</a>
+          <h5 data-i18n="footer.legal">Legal</h5>
+          <a href="#" class="footer-soon" aria-disabled="true" data-i18n-attr="title:footer.soonTooltip" title="Coming soon">
+            <span data-i18n="footer.terms">Terms</span>
+            <span class="footer-soon-tag" data-i18n="footer.soon">Coming soon</span>
+          </a>
+          <a href="#" class="footer-soon" aria-disabled="true" data-i18n-attr="title:footer.soonTooltip" title="Coming soon">
+            <span data-i18n="footer.privacy">Privacy</span>
+            <span class="footer-soon-tag" data-i18n="footer.soon">Coming soon</span>
+          </a>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
       <div class="container footer-bottom-inner">
-        <span>© 2026 GitFlowGraph. Zed 扩展本体基于 MIT 许可证。</span>
-        <span>team@gitflowgraph.dev</span>
+        <span data-i18n="footer.copyright">© 2026 GitFlowGraph. Zed extension wrapper licensed MIT.</span>
+        <span data-i18n="footer.contact">team@gitflowgraph.dev</span>
       </div>
     </div>
   </footer>
 
+  <script src="assets/i18n.js" defer></script>
 </body>
 </html>

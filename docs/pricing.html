@@ -1,15 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="meta.titlePricing">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pricing — GitFlowGraph</title>
-  <meta name="description" content="GitFlowGraph pricing plans. Start free, upgrade when you need advanced Git visualization features." />
+  <meta name="description" content="GitFlowGraph pricing plans. Start free, unlock advanced release features with Pro." data-i18n-content="meta.descriptionPricing" />
+  <meta property="og:title" content="Pricing — GitFlowGraph" data-i18n-content="meta.titlePricing" />
+  <meta property="og:description" content="GitFlowGraph pricing plans. Start free, unlock advanced release features with Pro." data-i18n-content="meta.descriptionPricing" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Pricing — GitFlowGraph" data-i18n-content="meta.titlePricing" />
+  <meta name="twitter:description" content="GitFlowGraph pricing plans. Start free, unlock advanced release features with Pro." data-i18n-content="meta.descriptionPricing" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="alternate icon" href="data:image/svg+xml;utf8,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 28 28%22&gt;&lt;rect width=%2228%22 height=%2228%22 rx=%227%22 fill=%22%231f6feb%22/&gt;&lt;circle cx=%228%22 cy=%2214%22 r=%222.5%22 fill=%22%23fff%22/&gt;&lt;circle cx=%2214%22 cy=%228%22 r=%222.5%22 fill=%22%2358a6ff%22/&gt;&lt;circle cx=%2220%22 cy=%2214%22 r=%222.5%22 fill=%22%233fb950%22/&gt;&lt;circle cx=%2214%22 cy=%2220%22 r=%222.5%22 fill=%22%23d29922%22/&gt;&lt;/svg&gt;" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('gitflowgraph.lang');
+        if (saved === 'zh') {
+          document.documentElement.setAttribute('lang', 'zh-CN');
+          document.documentElement.classList.add('lang-pending-zh');
+        }
+      } catch (_) { /* localStorage unavailable */ }
+    })();
+  </script>
 </head>
 <body>
 
@@ -17,7 +35,7 @@
   <header class="nav">
     <div class="nav-inner container">
       <a href="index.html" class="nav-logo">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
           <rect width="28" height="28" rx="7" fill="#1f6feb"/>
           <circle cx="8"  cy="14" r="2.5" fill="#fff"/>
           <circle cx="14" cy="8"  r="2.5" fill="#58a6ff"/>
@@ -30,41 +48,57 @@
         </svg>
         <span>GitFlowGraph</span>
       </a>
-      <nav class="nav-links">
-        <a href="index.html#features">Features</a>
-        <a href="pricing.html" class="nav-active">Pricing</a>
-        <a href="https://github.com/DevEloLin/GitFlowGraph" target="_blank">GitHub</a>
+      <nav class="nav-links" id="primary-nav" data-i18n-attr="aria-label:nav.menuLabel" aria-label="Primary">
+        <a href="index.html#features" data-i18n="nav.features">Features</a>
+        <a href="pricing.html" class="nav-active" data-i18n="nav.pricing">Pricing</a>
+        <a href="https://github.com/DevEloLin/GitFlowGraph#readme" target="_blank" rel="noopener" data-i18n="nav.docs">Docs</a>
+        <a href="https://github.com/DevEloLin/GitFlowGraph" target="_blank" rel="noopener" data-i18n="nav.github">GitHub</a>
       </nav>
-      <a href="index.html#install" class="btn btn-sm">Install Free</a>
+      <div class="lang-switch" role="group" data-i18n-attr="aria-label:nav.langLabel" aria-label="Language">
+        <button type="button" data-lang-switch="en" class="lang-active" aria-pressed="true" data-i18n="nav.lang.en">EN</button>
+        <button type="button" data-lang-switch="zh" aria-pressed="false" data-i18n="nav.lang.zh">中文</button>
+      </div>
+      <a href="index.html#install" class="btn btn-sm nav-cta" data-i18n="nav.installFree">Install Free</a>
+      <button
+        type="button"
+        class="nav-toggle"
+        aria-controls="primary-nav"
+        aria-expanded="false"
+        data-i18n-attr="aria-label:nav.toggleLabel"
+        aria-label="Open menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
     </div>
   </header>
 
   <!-- ── Pricing Hero ──────────────────────────────────────────────────── -->
   <section class="hero" style="padding-bottom: 0;">
-    <div class="container" style="text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 64px;">
+    <div class="container" style="text-align: center; max-width: 720px; margin: 0 auto; padding-bottom: 64px;">
       <div class="badge">
-        <svg width="12" height="12" viewBox="0 0 16 16" fill="#58a6ff"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg>
-        Simple, transparent pricing
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="#58a6ff" aria-hidden="true"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg>
+        <span data-i18n="pricing.hero.badge">Simple, transparent pricing</span>
       </div>
       <h1 style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 16px;">
-        Start free.<br/>
-        <span class="gradient-text">Unlock more when you're ready.</span>
+        <span data-i18n="pricing.hero.title">Start free.</span><br/>
+        <span class="gradient-text" data-i18n="pricing.hero.titleHighlight">Unlock release-ready when you need it.</span>
       </h1>
-      <p class="hero-sub" style="font-size: 1.1rem; margin-bottom: 32px;">
-        The core Git graph is free forever. Advanced features unlock with a Pro plan.
+      <p class="hero-sub" style="font-size: 1.05rem; margin-bottom: 32px;" data-i18n="pricing.hero.sub">
+        The Git Graph and unified diff are free forever. Smart Diff, the Release Workspace, multi-repo, file timeline and worktrees unlock with Pro.
       </p>
       <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; font-size: 0.85rem; color: var(--text-2);">
         <span style="display:flex; align-items:center; gap:6px;">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
-          30-day free trial
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
+          <span data-i18n="pricing.hero.note1">30-day free trial</span>
         </span>
         <span style="display:flex; align-items:center; gap:6px;">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
-          No credit card required
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
+          <span data-i18n="pricing.hero.note2">No credit card required</span>
         </span>
         <span style="display:flex; align-items:center; gap:6px;">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="#3fb950"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
-          Cancel anytime
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.749.749 0 1 1 1.06-1.06l1.47 1.47 3.97-3.97a.749.749 0 1 1 1.06 1.06Z"/></svg>
+          <span data-i18n="pricing.hero.note3">Cancel anytime</span>
         </span>
       </div>
     </div>
@@ -78,87 +112,92 @@
         <!-- Free -->
         <div class="plan-card">
           <div class="plan-header">
-            <div class="plan-name">Free</div>
-            <div class="plan-price"><span class="price-amount">$0</span></div>
-            <div class="plan-cycle">forever</div>
-            <p class="plan-desc">Everything you need for solo Git exploration.</p>
+            <div class="plan-name" data-i18n="plan.free.name">Free</div>
+            <div class="plan-price"><span class="price-amount" data-i18n="plan.free.price">$0</span></div>
+            <div class="plan-cycle" data-i18n="plan.free.cycle">forever</div>
+            <p class="plan-desc" data-i18n="plan.free.desc">Read your history. Inspect commits. Copy hashes. Forever, no account.</p>
           </div>
-          <a href="index.html#install" class="btn" style="width:100%; text-align:center; display:block; margin-bottom: 28px;">Install Free</a>
+          <a href="index.html#install" class="btn" style="width:100%; text-align:center; display:block; margin-bottom: 28px;" data-i18n="plan.free.cta">Install Free</a>
           <ul class="plan-features">
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Full Git commit graph
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.free.f1">Full Git commit graph (500 commits / request)</span>
             </li>
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Commit table view
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.free.f2">Unified diff with token-level coloring</span>
             </li>
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Unified &amp; side-by-side diff
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.free.f3">Branch &amp; tag badges, environment hex badges</span>
             </li>
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Branch &amp; tag labels
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.free.f4">Search — keyword, regex, author, branch</span>
             </li>
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Search &amp; filters
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.free.f5">Right-click: Copy hash / message / author · View Diff</span>
             </li>
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Context menu Git actions
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.free.f6">Read-only Release compare (ahead / behind)</span>
             </li>
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Single repository
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.free.f7">Workspace Profiles · Remotes &amp; credentials</span>
             </li>
           </ul>
         </div>
 
         <!-- Pro -->
         <div class="plan-card featured">
-          <div class="plan-badge-top">Most popular</div>
+          <div class="plan-badge-top" data-i18n="plan.pro.popular">Most popular</div>
           <div class="plan-header">
-            <div class="plan-name">Pro</div>
+            <div class="plan-name" data-i18n="plan.pro.name">Pro</div>
             <div class="plan-price">
               <span class="price-amount" id="pro-price">$9.9</span>
               <span class="price-per" id="pro-per">/mo</span>
             </div>
             <div class="plan-cycle">
               <label class="toggle-label">
-                <input type="checkbox" id="billing-toggle" onchange="toggleBilling()" />
+                <input type="checkbox" id="billing-toggle" />
                 <span class="toggle-track"><span class="toggle-thumb"></span></span>
-                Annual billing &nbsp;<span class="save-badge">Save 16%</span>
+                <span data-i18n="plan.pro.cycle.annual">Annual billing</span>
+                &nbsp;<span class="save-badge" data-i18n="plan.pro.cycle.save">Save 16%</span>
               </label>
             </div>
-            <p class="plan-desc">For engineers who want the full picture.</p>
+            <p class="plan-desc" data-i18n="plan.pro.desc">For engineers who own the release. Everything in Free, plus the full release workspace.</p>
           </div>
-          <a href="https://github.com/DevEloLin/GitFlowGraph" class="btn btn-primary" style="width:100%; text-align:center; display:block; margin-bottom: 28px;">Start 30-Day Trial</a>
+          <a href="https://github.com/DevEloLin/GitFlowGraph" class="btn btn-primary" style="width:100%; text-align:center; display:block; margin-bottom: 28px;" data-i18n="plan.pro.cta">Start 30-Day Trial</a>
           <ul class="plan-features">
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Everything in Free
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#3fb950" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.pro.f1">Everything in Free, with 5,000 commits / request</span>
             </li>
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#58a6ff"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Smart Diff — YAML / JSON / Terraform
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#58a6ff" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.pro.f2">Smart Diff — YAML / JSON / Terraform structural analysis</span>
             </li>
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#58a6ff"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Release Flow &amp; changelog generator
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#58a6ff" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.pro.f3">Side-by-side diff &amp; per-file Smart toggle</span>
             </li>
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#58a6ff"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Cross-Repo Timeline (up to 5 repos)
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#58a6ff" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.pro.f4">All right-click write actions (checkout, branch, tag, cherry-pick, reset, push, merge…)</span>
             </li>
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#58a6ff"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Hotfix tracker for cherry-picks
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#58a6ff" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.pro.f5">Release Workspace — Launchpad, Changelog, Actions, Environments, Velocity, Hotfix Wizard</span>
             </li>
             <li>
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="#58a6ff"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
-              Priority support via GitHub Issues
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#58a6ff" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.pro.f6">File Timeline · Multi-Repo Release View · Worktrees</span>
+            </li>
+            <li>
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#58a6ff" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+              <span data-i18n-html="plan.pro.f7">Filter Presets &amp; advanced filters (date range / path)</span>
             </li>
           </ul>
         </div>
@@ -171,148 +210,80 @@
   <section style="background: var(--bg-2); padding: 80px 0;">
     <div class="container">
       <div class="section-header">
-        <h2>Full feature comparison</h2>
+        <h2 data-i18n="cmp.heading">Full feature comparison</h2>
       </div>
       <div class="compare-wrap">
         <table class="compare-table">
           <thead>
             <tr>
-              <th>Feature</th>
-              <th>Free</th>
-              <th>Pro</th>
+              <th data-i18n="cmp.col.feature">Feature</th>
+              <th class="col-free" data-i18n="cmp.col.free">Free</th>
+              <th class="col-pro" data-i18n="cmp.col.pro">Pro</th>
             </tr>
           </thead>
           <tbody>
-            <tr class="compare-group">
-              <td colspan="3">Git Graph &amp; Navigation</td>
-            </tr>
+            <!-- Graph & Navigation -->
+            <tr class="compare-group"><td colspan="3" data-i18n-html="cmp.g.graph">Git Graph &amp; Navigation</td></tr>
+            <tr><td data-i18n="cmp.r.graphLanes">Commit graph with branch lanes</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.commitTable">Hash · author · date · message columns</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n-html="cmp.r.headIndicator">HEAD glow ring &amp; row highlight</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n-html="cmp.r.branchTag">Branch &amp; tag badges</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.envBadge">Environment hex badges (⬡)</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.infraIcon">Infrastructure ⚠ marker</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.searchBasic">Keyword / regex / author / branch search</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n-html="cmp.r.searchAdv">Date-range &amp; path filters</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.presets">Filter Presets (save / reload)</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
             <tr>
-              <td>Commit graph with branch lanes</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Commit table view</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Branch &amp; tag badges</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>HEAD indicator</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Uncommitted changes row</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Search — keyword, regex, author, date, path</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Context menu: checkout, branch, tag, cherry-pick, reset</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
+              <td data-i18n="cmp.r.commitLimit">History limit per request</td>
+              <td class="cval" data-i18n="cmp.v.500">500</td>
+              <td class="cval" data-i18n="cmp.v.5000">5,000</td>
             </tr>
 
-            <tr class="compare-group">
-              <td colspan="3">Diff Viewer</td>
-            </tr>
-            <tr>
-              <td>Unified diff with token-level coloring</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Side-by-side split diff</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>File tree with A/M/D/R status badges</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Binary file detection</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Smart Diff — YAML structural paths</td>
-              <td><span class="cdash">—</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Smart Diff — JSON key-path changes</td>
-              <td><span class="cdash">—</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Smart Diff — Terraform / HCL resource diff</td>
-              <td><span class="cdash">—</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
+            <!-- Right-click context menu -->
+            <tr class="compare-group"><td colspan="3" data-i18n="cmp.g.contextMenu">Right-click context menu</td></tr>
+            <tr><td data-i18n="cmp.r.copyHash">Copy Hash / Short Hash / Message / Author</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.viewDiff">View Diff (open commit detail)</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.checkout">Checkout commit / branch</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n-html="cmp.r.createBranchTag">Create Branch · Create Tag (annotated &amp; lightweight)</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.cherryRevert">Cherry-pick · Revert</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.mergePush">Merge Branch · Push Branch</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.renameDelete">Rename · Delete branch · Delete tag</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.reset">Soft / Mixed / Hard Reset</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
 
-            <tr class="compare-group">
-              <td colspan="3">Release &amp; Multi-Repo</td>
-            </tr>
-            <tr>
-              <td>Release Flow — compare any two refs</td>
-              <td><span class="cdash">—</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Changelog generator (conventional commits)</td>
-              <td><span class="cdash">—</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Hotfix tracker for cherry-picked commits</td>
-              <td><span class="cdash">—</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Cross-Repo Timeline</td>
-              <td><span class="cdash">—</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Multi-repo workspace (up to 5 repos)</td>
-              <td><span class="cdash">—</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
+            <!-- Diff Viewer -->
+            <tr class="compare-group"><td colspan="3" data-i18n="cmp.g.diff">Diff Viewer</td></tr>
+            <tr><td data-i18n="cmp.r.unifiedDiff">Unified diff with token coloring</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n-html="cmp.r.fileTree">File tree with A/M/D/R badges &amp; +/− counts</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.binDetect">Binary file detection</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n-html="cmp.r.sideBySide">Side-by-side diff &amp; intra-line highlight</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.smartYaml">Smart Diff — YAML structural paths</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.smartJson">Smart Diff — JSON key-path changes</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.smartTf">Smart Diff — Terraform / HCL block diff</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.smartToggle">Per-file Smart toggle in Commit Detail</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.fileHistorySub">Commit Detail · File History sub-tab</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
 
-            <tr class="compare-group">
-              <td colspan="3">Platform</td>
-            </tr>
-            <tr>
-              <td>Runs 100% locally — no cloud</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Zero telemetry</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>macOS / Linux / Windows</td>
-              <td><span class="ccheck">✓</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
-            <tr>
-              <td>Priority GitHub support</td>
-              <td><span class="cdash">—</span></td>
-              <td><span class="ccheck">✓</span></td>
-            </tr>
+            <!-- Release & Multi-Repo -->
+            <tr class="compare-group"><td colspan="3" data-i18n-html="cmp.g.release">Release &amp; Multi-Repo</td></tr>
+            <tr><td data-i18n="cmp.r.releaseCompare">Release / Changelog Compare (read-only)</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.changelog">Generate categorized Markdown changelog</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n-html="cmp.r.risk">Release Risk Score &amp; risk-factors panel</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.launchpad">Release Launchpad — pre-flight checklist</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n-html="cmp.r.actions">Actions tab — hotfix sync &amp; tag check</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.envs">Environments — pipeline comparison grid</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.velocity">Velocity dashboard</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.hotfix">Hotfix Wizard (4-step guided)</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.fileTimeline">File Timeline (per-file history)</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.multiRepo">Multi-Repo Release View</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.worktrees">Worktrees panel</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.profiles">Workspace Profiles</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+
+            <!-- Platform -->
+            <tr class="compare-group"><td colspan="3" data-i18n-html="cmp.g.platform">Runtime &amp; Platform</td></tr>
+            <tr><td data-i18n="cmp.r.local">Runs 100% locally — no cloud</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.telemetry">Zero telemetry</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.os">macOS arm64 · Linux x86_64/arm64 · Windows x86_64</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n-html="cmp.r.remotes">Remotes &amp; credential storage · Fetch</td><td class="ccheck">✓</td><td class="ccheck">✓</td></tr>
+            <tr><td data-i18n="cmp.r.support">Priority GitHub support</td><td class="cdash">—</td><td class="ccheck">✓</td></tr>
           </tbody>
         </table>
       </div>
@@ -323,40 +294,33 @@
   <section style="background: var(--bg); padding: 80px 0;">
     <div class="container" style="max-width: 760px; margin: 0 auto;">
       <div class="section-header">
-        <h2>Frequently asked questions</h2>
+        <h2 data-i18n="faq.heading">Frequently asked questions</h2>
       </div>
       <div class="faq-list">
-
         <details class="faq-item">
-          <summary>What's included in the free plan?</summary>
-          <p>The free plan gives you the full Git commit graph, commit table view, unified and side-by-side diff viewer, branch and tag labels, all search and filter options, and context-menu Git actions (checkout, branch, tag, cherry-pick, soft/hard reset) — for a single repository, forever.</p>
+          <summary data-i18n="faq.q1">What's included in the Free tier?</summary>
+          <p data-i18n-html="faq.a1">The full Git commit graph (up to 500 commits per request), unified diff with token coloring, file tree, branch/tag/environment badges, keyword · regex · author · branch search, the read-only Release compare, Workspace Profiles, and the Remotes credential manager. Right-click is limited to the four Copy actions and View Diff. Forever free, no account.</p>
         </details>
-
         <details class="faq-item">
-          <summary>How does the 30-day trial work?</summary>
-          <p>When you install GitFlowGraph, every Pro feature is automatically unlocked for 30 days at no cost. No credit card is required to start. At the end of the trial, Pro features are gated until a license is activated — the free tier continues working without any interruption.</p>
+          <summary data-i18n="faq.q2">How does the 30-day trial work?</summary>
+          <p data-i18n-html="faq.a2">On the License panel click <strong>Start Free Trial</strong>. Every Pro feature unlocks for 30 days, no credit card. When the trial ends, the editor reverts to Free — your data, environments, profiles and credentials all stay intact. Activate a Pro key any time to restore full access.</p>
         </details>
-
         <details class="faq-item">
-          <summary>Does my data ever leave my machine?</summary>
-          <p>No. All Git operations — reading history, generating diffs, parsing files — run entirely locally using the bundled runtime binary. No commit data, diff content, or file contents are ever sent to any server. License validation communicates only a license key hash, not any repository data.</p>
+          <summary data-i18n="faq.q3">Does my data ever leave my machine?</summary>
+          <p data-i18n-html="faq.a3">No. The runtime is a local Rust binary on <code>localhost:9876</code>. Reading history, generating diffs, parsing YAML/JSON/Terraform — all of it runs on your machine. The only outbound network call is license activation against Lemon Squeezy (no repository data is ever sent).</p>
         </details>
-
         <details class="faq-item">
-          <summary>What is Smart Diff exactly?</summary>
-          <p>Smart Diff is a semantic diffing engine that understands the <em>structure</em> of YAML, JSON, and Terraform/HCL files. Instead of showing raw line changes, it reports what logically changed — for example <code>spec.template.containers[0].image: nginx:1.24 → nginx:1.25</code> — with the full structural path so you always know precisely what changed and where.</p>
+          <summary data-i18n="faq.q4">What is Smart Diff exactly?</summary>
+          <p data-i18n-html="faq.a4">A semantic diff engine that understands the <em>structure</em> of YAML, JSON and Terraform/HCL files. Instead of "lines 14–15 changed" you get <code>spec.template.containers[0].image: nginx:1.24 → nginx:1.25</code> — the dot-path, old value and new value, with auto-categorisation for added / removed / modified / moved.</p>
         </details>
-
         <details class="faq-item">
-          <summary>Can I use GitFlowGraph with private repositories?</summary>
-          <p>Yes. GitFlowGraph works with any local Git repository — private or public, hosted anywhere or fully offline. It reads your repo directly from disk via the bundled runtime and never needs network access to the remote for graph rendering or diff viewing.</p>
+          <summary data-i18n="faq.q5">Can I use GitFlowGraph with private repositories?</summary>
+          <p data-i18n-html="faq.a5">Yes. The runtime reads any local Git repo from disk — public or private, online or fully offline. For network operations (push / fetch) configure a PAT in the Remotes panel; the credential is HMAC-signed and only ever sent to the matching host.</p>
         </details>
-
         <details class="faq-item">
-          <summary>What happens if I cancel my Pro subscription?</summary>
-          <p>If you cancel, your account moves to the free tier at the end of the current billing period. The core Git graph and diff viewer remain fully functional. Smart Diff, Release Flow, and Cross-Repo Timeline become unavailable until a new license is activated.</p>
+          <summary data-i18n="faq.q6">What happens if I cancel Pro?</summary>
+          <p data-i18n-html="faq.a6">You drop back to Free at the end of the billing period. The Git Graph, unified diff and Release compare keep working forever. Smart Diff, Release Workspace, File Timeline, Multi-Repo and Worktrees lock until a license is re-activated. No data is deleted.</p>
         </details>
-
       </div>
     </div>
   </section>
@@ -364,15 +328,15 @@
   <!-- ── CTA ──────────────────────────────────────────────────────────── -->
   <section style="background: var(--bg-2); padding: 80px 0; text-align: center; border-top: 1px solid var(--border);">
     <div class="container" style="max-width: 600px; margin: 0 auto;">
-      <h2 style="font-size: clamp(1.6rem, 4vw, 2.4rem); margin-bottom: 12px;">Ready to understand your Git history?</h2>
-      <p style="color: var(--text-2); margin-bottom: 36px; font-size: 1.05rem;">Install in seconds. No account needed to start.</p>
+      <h2 style="font-size: clamp(1.6rem, 4vw, 2.4rem); margin-bottom: 12px;" data-i18n="cta.heading">Ready to own your release flow?</h2>
+      <p style="color: var(--text-2); margin-bottom: 36px; font-size: 1.05rem;" data-i18n="cta.sub">Install in seconds. Trial unlocks every Pro feature for 30 days — no card.</p>
       <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
         <a href="index.html#install" class="btn btn-primary" style="min-width: 180px; text-align: center;">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.97a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.779a.749.749 0 1 1 1.06-1.06l1.97 1.97Z"/></svg>
-          Install Free
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.97a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.779a.749.749 0 1 1 1.06-1.06l1.97 1.97Z"/></svg>
+          <span data-i18n="cta.installFree">Install Free</span>
         </a>
-        <a href="https://github.com/DevEloLin/GitFlowGraph" class="btn btn-ghost" target="_blank" style="min-width: 180px; text-align: center;">
-          Start 30-Day Trial
+        <a href="https://github.com/DevEloLin/GitFlowGraph" class="btn btn-ghost" target="_blank" rel="noopener" style="min-width: 180px; text-align: center;">
+          <span data-i18n="cta.startTrial">Start 30-Day Trial</span>
         </a>
       </div>
     </div>
@@ -383,7 +347,7 @@
     <div class="container footer-inner">
       <div class="footer-brand">
         <a href="index.html" class="nav-logo">
-          <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
+          <svg width="22" height="22" viewBox="0 0 28 28" fill="none" aria-hidden="true">
             <rect width="28" height="28" rx="7" fill="#1f6feb"/>
             <circle cx="8"  cy="14" r="2.5" fill="#fff"/>
             <circle cx="14" cy="8"  r="2.5" fill="#58a6ff"/>
@@ -396,43 +360,68 @@
           </svg>
           <span>GitFlowGraph</span>
         </a>
-        <p>Git visualization for Zed</p>
+        <p data-i18n="footer.tagline">Release-ready Git workspace for Zed</p>
       </div>
       <div class="footer-links">
         <div class="footer-col">
-          <h5>Product</h5>
-          <a href="index.html#features">Features</a>
-          <a href="pricing.html">Pricing</a>
-          <a href="index.html#install">Install</a>
+          <h5 data-i18n="footer.product">Product</h5>
+          <a href="index.html#features" data-i18n="footer.features">Features</a>
+          <a href="pricing.html" data-i18n="footer.pricing">Pricing</a>
+          <a href="index.html#install" data-i18n="footer.install">Install</a>
         </div>
         <div class="footer-col">
-          <h5>Resources</h5>
-          <a href="https://github.com/DevEloLin/GitFlowGraph" target="_blank">GitHub</a>
-          <a href="https://github.com/DevEloLin/GitFlowGraph/issues" target="_blank">Issues</a>
-          <a href="https://zed.dev/extensions?q=gitflowgraph" target="_blank">Zed Marketplace</a>
+          <h5 data-i18n="footer.resources">Resources</h5>
+          <a href="https://github.com/DevEloLin/GitFlowGraph#readme" target="_blank" rel="noopener" data-i18n="footer.docs">Documentation</a>
+          <a href="https://github.com/DevEloLin/GitFlowGraph" target="_blank" rel="noopener" data-i18n="footer.github">GitHub</a>
+          <a href="https://github.com/DevEloLin/GitFlowGraph/issues" target="_blank" rel="noopener" data-i18n="footer.issues">Issues</a>
+          <a href="https://zed.dev/extensions?q=gitflowgraph" target="_blank" rel="noopener" data-i18n="footer.marketplace">Zed Marketplace</a>
         </div>
         <div class="footer-col">
-          <h5>Legal</h5>
-          <a href="/terms">Terms</a>
-          <a href="/privacy">Privacy</a>
+          <h5 data-i18n="footer.legal">Legal</h5>
+          <a href="#" class="footer-soon" aria-disabled="true" data-i18n-attr="title:footer.soonTooltip" title="Coming soon">
+            <span data-i18n="footer.terms">Terms</span>
+            <span class="footer-soon-tag" data-i18n="footer.soon">Coming soon</span>
+          </a>
+          <a href="#" class="footer-soon" aria-disabled="true" data-i18n-attr="title:footer.soonTooltip" title="Coming soon">
+            <span data-i18n="footer.privacy">Privacy</span>
+            <span class="footer-soon-tag" data-i18n="footer.soon">Coming soon</span>
+          </a>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
       <div class="container footer-bottom-inner">
-        <span>© 2025 GitFlowGraph. MIT license for the Zed extension wrapper.</span>
-        <span>team@gitflowgraph.dev</span>
+        <span data-i18n="footer.copyright">© 2026 GitFlowGraph. Zed extension wrapper licensed MIT.</span>
+        <span data-i18n="footer.contact">team@gitflowgraph.dev</span>
       </div>
     </div>
   </footer>
 
+  <script src="assets/i18n.js" defer></script>
   <script>
-    function toggleBilling() {
-      const annual = document.getElementById('billing-toggle').checked;
-      document.getElementById('pro-price').textContent = annual ? '$99' : '$9.9';
-      document.getElementById('pro-per').textContent = annual ? '/yr' : '/mo';
-    }
-  </script>
+    // Billing toggle — re-runs when language changes so prices follow the locale.
+    (function () {
+      const toggle = document.getElementById('billing-toggle');
+      const priceEl = document.getElementById('pro-price');
+      const perEl   = document.getElementById('pro-per');
 
+      function refresh() {
+        // If i18n.js failed to load (network error, blocked extension), fall
+        // back to the static text already in the DOM rather than displaying
+        // raw lookup keys like "plan.pro.priceMo".
+        if (!window.GFG_I18N || typeof window.GFG_I18N.t !== 'function') return;
+        const t = window.GFG_I18N.t;
+        const annual = !!(toggle && toggle.checked);
+        priceEl.textContent = annual ? t('plan.pro.priceYr') : t('plan.pro.priceMo');
+        perEl.textContent   = annual ? t('plan.pro.perYr')   : t('plan.pro.perMo');
+      }
+
+      window.refreshBillingLabels = refresh;
+      if (toggle) toggle.addEventListener('change', refresh);
+      window.addEventListener('i18n:changed', refresh);
+      // Initial paint after i18n loads
+      document.addEventListener('DOMContentLoaded', refresh);
+    })();
+  </script>
 </body>
 </html>
