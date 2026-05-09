@@ -197,7 +197,7 @@ fn platform_paths(
 }
 
 fn binary_is_current(local_binary: &str, local_dir: &str) -> bool {
-    if !fs::metadata(local_binary).map_or(false, |m| m.is_file()) {
+    if !fs::metadata(local_binary).is_ok_and(|m| m.is_file()) {
         return false;
     }
     let version_file = format!("{local_dir}/binary.version");
