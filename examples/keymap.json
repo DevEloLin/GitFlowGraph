@@ -1,0 +1,21 @@
+// Append this to ~/.config/zed/keymap.json to bind one-key launchers for
+// GitFlowGraph. Pair with the tasks.json template in this same folder.
+//
+// After both files are installed:
+//   cmd-shift-g       → opens the main GitFlowGraph panel in your browser
+//   cmd-shift-d       → jumps directly to the Smart Diff tab
+//   cmd-shift-r       → jumps directly to the Release tab
+//
+// Zed's public extension API doesn't yet let extensions add their own
+// status-bar icons, so this keymap-driven approach is the closest
+// equivalent to a one-click launcher button.
+[
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-shift-g": ["task::Spawn", { "task_name": "GitFlowGraph: Launch" }],
+      "cmd-shift-d": ["task::Spawn", { "task_name": "GitFlowGraph: Open Smart Diff" }],
+      "cmd-shift-r": ["task::Spawn", { "task_name": "GitFlowGraph: Open Release" }]
+    }
+  }
+]

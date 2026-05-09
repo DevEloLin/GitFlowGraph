@@ -1,0 +1,30 @@
+// Copy this to ~/.config/zed/tasks.json (or merge with your existing tasks).
+//
+// Once installed, the "GitFlowGraph: Launch" task is available via:
+//   - cmd-shift-p → "task: spawn" → "GitFlowGraph: Launch"
+//   - any keybinding you set up via keymap.json (see ./keymap.json)
+//
+// The task opens http://localhost:9876 in your default browser. The runtime
+// itself is started automatically by Zed as soon as you open a git project
+// with the GitFlowGraph extension installed; this task is just a convenient
+// way to bring the panel forward.
+[
+  {
+    "label": "GitFlowGraph: Launch",
+    "command": "open http://localhost:9876 || xdg-open http://localhost:9876 || start http://localhost:9876",
+    "reveal": "never",
+    "hide": "on_success"
+  },
+  {
+    "label": "GitFlowGraph: Open Smart Diff",
+    "command": "open http://localhost:9876/?tab=diff || xdg-open http://localhost:9876/?tab=diff || start http://localhost:9876/?tab=diff",
+    "reveal": "never",
+    "hide": "on_success"
+  },
+  {
+    "label": "GitFlowGraph: Open Release",
+    "command": "open http://localhost:9876/?tab=release || xdg-open http://localhost:9876/?tab=release || start http://localhost:9876/?tab=release",
+    "reveal": "never",
+    "hide": "on_success"
+  }
+]

@@ -52,8 +52,31 @@ impl zed::Extension for GitFlowGraphExtension {
             "gitflowgraph" => Ok(SlashCommandOutput {
                 text: format!(
                     "## GitFlowGraph\n\n\
-                     The interactive Git graph is available at \
-                     [http://localhost:{port}](http://localhost:{port}).\n\n\
+                     ▶ **Launch the panel**: [http://localhost:{port}](http://localhost:{port})\n\n\
+                     **Quicker access** — Zed's extension API doesn't yet let extensions \
+                     add status-bar icons, but you can get a one-key launcher:\n\n\
+                     1. Add this to `~/.config/zed/keymap.json`:\n\
+                     ```json\n\
+                     [\n\
+                       {{\n\
+                         \"context\": \"Workspace\",\n\
+                         \"bindings\": {{\n\
+                           \"cmd-shift-g\": [\"task::Spawn\", {{ \"task_name\": \"GitFlowGraph: Launch\" }}]\n\
+                         }}\n\
+                       }}\n\
+                     ]\n\
+                     ```\n\
+                     2. Add this to `~/.config/zed/tasks.json`:\n\
+                     ```json\n\
+                     [\n\
+                       {{\n\
+                         \"label\": \"GitFlowGraph: Launch\",\n\
+                         \"command\": \"open http://localhost:{port} || xdg-open http://localhost:{port}\",\n\
+                         \"reveal\": \"never\",\n\
+                         \"hide\": \"on_success\"\n\
+                       }}\n\
+                     ]\n\
+                     ```\n\n\
                      **Tips**\n\
                      - The runtime starts automatically when you open a Git project.\n\
                      - Press `Cmd+R` inside the panel to refresh the graph.\n\
