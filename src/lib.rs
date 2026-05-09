@@ -3,7 +3,7 @@ use std::fs;
 use zed_extension_api::{
     self as zed,
     http_client::{fetch, HttpMethod, HttpRequest, RedirectPolicy},
-    LanguageServerId, Result, SlashCommand, SlashCommandOutput,
+    LanguageServerId, Result, SlashCommand, SlashCommandArgumentCompletion, SlashCommandOutput,
 };
 
 const RUNTIME_VERSION: &str = "0.1.0-beta.1";
@@ -75,6 +75,8 @@ impl zed::Extension for GitFlowGraphExtension {
             "gitflowgraph-tags" => render_tags(),
             "gitflowgraph-worktrees" => render_worktrees(),
             "gitflowgraph-license" => render_license(),
+            "gitflowgraph-remotes" => render_remotes(),
+            "gitflowgraph-credentials" => render_credentials(),
 
             "gitflowgraph-diff" => {
                 let range = arg(0).unwrap_or_else(|| "HEAD~1..HEAD".to_string());
@@ -293,6 +295,68 @@ impl zed::Extension for GitFlowGraphExtension {
             )),
         }
     }
+
+    /// Auto-complete the *argument* of a slash command. Zed calls this as
+    /// the user types — for ref-shaped commands we hit the local runtime
+    /// for `/api/branches` + `/api/tags` and surface them as completion
+    /// items. Without this the user has to know the exact branch / tag /
+    /// SHA before invoking the command, which is the worst part of the
+    /// slash-command UX. With this, typing
+    ///   /gitflowgraph-checkout fea<Tab>
+    /// drops down the matching branches, the user picks one, and the
+    /// command runs.
+    ///
+    /// Failure mode: if the runtime isn't reachable (Zed extension is
+    /// activated before the LSP server starts on a fresh project),
+    /// returning an empty list is the right thing — Zed silently falls
+    /// back to free-text and the user can still type the ref by hand.
+    fn complete_slash_command_argument(
+        &self,
+        command: SlashCommand,
+        args: Vec<String>,
+    ) -> Result<Vec<SlashCommandArgumentCompletion>, String> {
+        // Only completing the FIRST argument for now. Position-aware
+        // multi-arg completion (e.g. `/gitflowgraph-create-branch <name>
+        // <here-want-tag-completion>`) is more complex and Zed's
+        // current API doesn't tell us which arg index is being typed.
+        if args.len() > 1 {
+            return Ok(Vec::new());
+        }
+
+        match command.name.as_str() {
+            // Refs: branch + tag + a small set of useful pseudo-refs.
+            "gitflowgraph-checkout"
+            | "gitflowgraph-merge"
+            | "gitflowgraph-push"
+            | "gitflowgraph-fetch" => Ok(complete_ref_argument(true)),
+
+            // Branch-only (renaming / deleting a tag would be wrong).
+            "gitflowgraph-delete-branch" => Ok(complete_branches_only()),
+
+            // Tag-only.
+            "gitflowgraph-delete-tag" => Ok(complete_tags_only()),
+
+            // Range-shaped commands: prefix the user's typed
+            // "from.." with each tag/branch as the "to" suggestion.
+            // E.g. typing `/gitflowgraph-changelog v1.0..` then Tab
+            // suggests v1.1, v1.2, main, etc.
+            "gitflowgraph-diff"
+            | "gitflowgraph-changelog"
+            | "gitflowgraph-risk"
+            | "gitflowgraph-launchpad" => Ok(complete_range_argument(args.first())),
+
+            // Reset: arg(0) is the mode (soft/mixed/hard), not a ref.
+            "gitflowgraph-reset" => Ok(vec![
+                completion("soft", "soft"),
+                completion("mixed", "mixed"),
+                completion("hard", "hard"),
+            ]),
+
+            // No completion for cherry-pick/revert/file-history/etc. —
+            // SHAs and paths don't fit the "small enumerable list" model.
+            _ => Ok(Vec::new()),
+        }
+    }
 }
 
 impl GitFlowGraphExtension {
@@ -506,6 +570,105 @@ fn url_encode_range(range: &str) -> String {
 // snippets together so the user gets a one-screen summary without
 // switching to the browser.
 
+// ── Slash-command argument-completion helpers ──────────────────────────────
+//
+// Each helper queries the local runtime for the live ref / tag list and
+// turns the response into `SlashCommandArgumentCompletion` items. Failures
+// (runtime not started yet, etc.) return an empty list so Zed silently
+// falls back to free-text — never blocks the user from typing a ref by hand.
+
+fn completion(label: &str, new_text: &str) -> SlashCommandArgumentCompletion {
+    SlashCommandArgumentCompletion {
+        label: label.to_string(),
+        new_text: new_text.to_string(),
+        // We don't auto-run on completion — branch / tag / SHA picks are
+        // usually one of multiple args (e.g. /push <branch> [remote]) so
+        // the user should be able to keep typing.
+        run_command: false,
+    }
+}
+
+/// Branches + tags + a small set of always-useful pseudo-refs. The `head_first`
+/// flag puts HEAD at the top because that's what users type most.
+fn complete_ref_argument(head_first: bool) -> Vec<SlashCommandArgumentCompletion> {
+    let mut out = Vec::new();
+    if head_first {
+        out.push(completion("HEAD", "HEAD"));
+    }
+    out.extend(branches_for_completion());
+    out.extend(tags_for_completion());
+    out
+}
+
+fn complete_branches_only() -> Vec<SlashCommandArgumentCompletion> {
+    branches_for_completion()
+}
+
+fn complete_tags_only() -> Vec<SlashCommandArgumentCompletion> {
+    tags_for_completion()
+}
+
+/// Range-arg completion: handles both the bare-ref case (suggest `<ref>`)
+/// and the partial-range case (`from..` → suggest `from..<ref>` for each
+/// candidate ref). Lets `/gitflowgraph-changelog v1.0..<Tab>` drop down
+/// every newer tag without the user retyping the prefix.
+fn complete_range_argument(typed: Option<&String>) -> Vec<SlashCommandArgumentCompletion> {
+    let prefix = typed
+        .and_then(|s| s.rfind("..").map(|idx| &s[..idx + 2]))
+        .unwrap_or("");
+    let mut out = Vec::new();
+    if prefix.is_empty() {
+        // No `..` typed yet — suggest each ref as a starting point.
+        out.push(completion("HEAD", "HEAD"));
+    }
+    for c in branches_for_completion().into_iter().chain(tags_for_completion()) {
+        let new_text = if prefix.is_empty() {
+            c.new_text
+        } else {
+            format!("{prefix}{}", c.new_text)
+        };
+        out.push(SlashCommandArgumentCompletion {
+            label: c.label,
+            new_text,
+            run_command: false,
+        });
+    }
+    out
+}
+
+fn branches_for_completion() -> Vec<SlashCommandArgumentCompletion> {
+    let body = match fetch_local_get("/api/branches") {
+        Ok(b) => b,
+        Err(_) => return Vec::new(),
+    };
+    let branches: Vec<BranchDto> = serde_json::from_str(&body).unwrap_or_default();
+    branches
+        .into_iter()
+        .map(|b| {
+            let label = if b.is_head {
+                format!("⭐ {} (HEAD)", b.name)
+            } else {
+                b.name.clone()
+            };
+            completion(&label, &b.name)
+        })
+        .collect()
+}
+
+fn tags_for_completion() -> Vec<SlashCommandArgumentCompletion> {
+    let body = match fetch_local_get("/api/tags") {
+        Ok(b) => b,
+        Err(_) => return Vec::new(),
+    };
+    let tags: Vec<TagDto> = serde_json::from_str(&body).unwrap_or_default();
+    tags.into_iter()
+        .map(|t| {
+            let label = format!("🏷️ {}", t.name);
+            completion(&label, &t.name)
+        })
+        .collect()
+}
+
 fn fetch_local_get(path: &str) -> std::result::Result<String, String> {
     // Build a GET against the runtime's loopback address. Localhost
     // requests inherit Zed's HTTP client, which permits private-IP
@@ -671,6 +834,22 @@ struct RiskResponse {
     changed_files: u32,
     #[serde(default)]
     factors: Vec<RiskFactorDto>,
+}
+
+#[derive(Deserialize)]
+struct RemoteInfoDto {
+    name: String,
+    url: String,
+    platform_display: String,
+    has_credential: bool,
+}
+
+#[derive(Deserialize)]
+struct CredentialEntryDto {
+    host: String,
+    platform: String,
+    token_hint: String,
+    username: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -1185,6 +1364,64 @@ fn render_tags() -> Result<SlashCommandOutput, String> {
     }
     out.push_str("\n_Create with `/gitflowgraph-create-tag <name> [from]` · \
                  delete with `/gitflowgraph-delete-tag <name>`._\n");
+    Ok(SlashCommandOutput { text: out, sections: vec![] })
+}
+
+fn render_remotes() -> Result<SlashCommandOutput, String> {
+    let body = fetch_local_get("/api/remotes")?;
+    let remotes: Vec<RemoteInfoDto> =
+        serde_json::from_str(&body).map_err(|e| format!("parse remotes: {e}"))?;
+    if remotes.is_empty() {
+        return Ok(SlashCommandOutput {
+            text: "## Remotes\n\n_No remotes configured. Add one with `git remote add` first._\n"
+                .into(),
+            sections: vec![],
+        });
+    }
+    let mut out = String::from("## Remotes\n\n| Name | URL | Platform | Credential |\n|---|---|---|---|\n");
+    for r in &remotes {
+        out.push_str(&format!(
+            "| `{}` | `{}` | {} | {} |\n",
+            escape_md(&r.name),
+            escape_md(&r.url),
+            escape_md(&r.platform_display),
+            if r.has_credential { "✓ stored" } else { "⚠ none" },
+        ));
+    }
+    out.push_str("\n_Fetch with `/gitflowgraph-fetch <name>` (default: origin)._\n");
+    Ok(SlashCommandOutput { text: out, sections: vec![] })
+}
+
+fn render_credentials() -> Result<SlashCommandOutput, String> {
+    let body = fetch_local_get("/api/settings/credentials")?;
+    let creds: Vec<CredentialEntryDto> =
+        serde_json::from_str(&body).map_err(|e| format!("parse credentials: {e}"))?;
+    if creds.is_empty() {
+        return Ok(SlashCommandOutput {
+            text: "## Stored credentials\n\n_No credentials stored._\n\n\
+                   To add one, open the **Remotes** tab in the browser UI \
+                   (http://localhost:9876) — slash commands don't accept \
+                   plaintext PATs to keep them out of Assistant chat history.\n"
+                .into(),
+            sections: vec![],
+        });
+    }
+    let mut out = String::from(
+        "## Stored credentials\n\n| Host | Platform | Username | Token (masked) |\n|---|---|---|---|\n",
+    );
+    for c in &creds {
+        out.push_str(&format!(
+            "| `{}` | {} | {} | `{}` |\n",
+            escape_md(&c.host),
+            escape_md(&c.platform),
+            c.username.as_deref().map(escape_md).unwrap_or_else(|| "—".into()),
+            escape_md(&c.token_hint),
+        ));
+    }
+    out.push_str(
+        "\n_Add / edit / delete in the browser **Remotes** tab — \
+        plaintext PATs would otherwise leak into Assistant chat history._\n",
+    );
     Ok(SlashCommandOutput { text: out, sections: vec![] })
 }
 
