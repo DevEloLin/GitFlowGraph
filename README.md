@@ -214,28 +214,64 @@ zed --install-extension .
 
 ---
 
-## 在 Zed 里使用（首选方式）
+## 在 Zed 里使用 — 完整功能 24+ 个 slash command
 
-Zed 扩展 API 暂不开放 webview / 自定义面板给扩展（公开能力只有 LSP / slash commands / themes / languages / debug adapters / context servers）。**主路径**是用 slash command 把数据"取回 Zed Assistant 面板"作为富 Markdown 渲染 — 表格、代码块、链接、徽章都能正确显示。
+Zed 扩展 API 不开放 webview，所以无法把 React UI 嵌进编辑器；但**所有功能都通过 slash command 在 Assistant 面板里可达**：表格、代码块、徽章、链接全部正确渲染，**包括所有写操作**（checkout/cherry-pick/merge/push 等都直接执行）。
 
-打开 Zed 的 **Assistant** 面板（`⌘?`），输入 `/gitflowgraph` 系列命令：
+按 `⌘?` 打开 Assistant 面板，输入命令：
+
+### 入口
 
 | 命令 | 用途 |
 |---|---|
-| `/gitflowgraph` | 概览 — 授权状态、工作树摘要、最近 5 笔提交、其他 slash 命令的入口 |
-| `/gitflowgraph-status` | 工作树状态：暂存/未暂存/未跟踪文件全列出 |
-| `/gitflowgraph-graph 20` | 最近 N 笔提交（默认 20），含分支和 tag 标注，HEAD 高亮 |
-| `/gitflowgraph-diff <ref>` 或 `<from>..<to>` | Smart Diff：文件清单 + 行数统计 |
-| `/gitflowgraph-changelog <from>..<to>` | 自动生成的 release changelog |
-| `/gitflowgraph-risk <from>..<to>` | 发布风险评分 + 高风险文件清单 |
+| `/gitflowgraph` 或 `/gitflowgraph-help` | 概览 + 所有 slash command 列表 |
 
-这些命令直接调本地 runtime API（`http://localhost:9876/api/...`）拉数据，不需要切换到浏览器。运行时在你打开 Git 项目时由 Zed 自动启动。
+### 读视图
 
-> 提示：Pro / Trial 用户能拿到完整能力（changelog / risk / 5,000 提交历史）；Free 用户的 `/gitflowgraph-graph` 上限 500 条，会显示 "activate Pro for unlimited history"。
+| 命令 | 用途 |
+|---|---|
+| `/gitflowgraph-status` | 工作树状态（staged / unstaged / untracked） |
+| `/gitflowgraph-graph [n]` | 最近 N 笔提交 + 分支 / tag 标注 |
+| `/gitflowgraph-branches` | 所有分支 + HEAD 标记 |
+| `/gitflowgraph-tags` | 所有 tag + 指向的 commit |
+| `/gitflowgraph-worktrees` | git worktree 列表 |
+| `/gitflowgraph-license` | 授权 tier / 机器使用量 / expires_at |
 
-### 完整交互式 UI（备选）
+### 范围 / release 分析（Pro）
 
-需要泳道图、Hotfix Wizard、可视化 release launchpad、并排 diff 等富 UI 功能时，访问 **http://localhost:9876**。
+| 命令 | 用途 |
+|---|---|
+| `/gitflowgraph-diff <range>` | 文件级 diff 摘要 |
+| `/gitflowgraph-changelog <range>` | 自动 changelog |
+| `/gitflowgraph-risk <range>` | 发布风险评分 + 因子 |
+| `/gitflowgraph-launchpad <range>` | compare + risk + checklist + changelog 一次出全 |
+| `/gitflowgraph-velocity` | release 频率仪表盘 |
+| `/gitflowgraph-file-history <path>` | 文件所有提交 |
+
+### 写操作（直接执行，**无需切到浏览器**）
+
+| 命令 | 用途 |
+|---|---|
+| `/gitflowgraph-checkout <ref>` | 切分支 / tag / commit |
+| `/gitflowgraph-cherry-pick <sha>` | Cherry-pick |
+| `/gitflowgraph-revert <sha>` | 创建反向 commit |
+| `/gitflowgraph-merge <branch>` | 合并分支到当前 HEAD |
+| `/gitflowgraph-reset <soft\|mixed\|hard> <sha>` | 重置 HEAD |
+| `/gitflowgraph-fetch [remote]` | Fetch（默认 origin） |
+| `/gitflowgraph-push <branch> [remote]` | Push |
+| `/gitflowgraph-create-branch <name> [from]` | 创建分支 |
+| `/gitflowgraph-delete-branch <name> [--force]` | 删除分支 |
+| `/gitflowgraph-create-tag <name> [from] [--annotated <msg>]` | 创建 tag |
+| `/gitflowgraph-delete-tag <name>` | 删除 tag |
+| `/gitflowgraph-trial-start` | 启动 30 天 Pro 免费试用 |
+
+每个写命令的成功反馈：`✓ <action>` + 提示浏览器侧 ⌘R 刷新；失败：含原因（LS 402 会被翻译为 "requires Pro"）。
+
+> Free 用户：`/gitflowgraph-graph` 上限 500 条；写操作会被服务端 402 拒绝，slash 命令会显示 "Open the License tab to activate"。
+
+### 完整可视化 UI（可选）
+
+需要泳道图、并排 diff、Hotfix Wizard 可视化向导时，访问 **http://localhost:9876**。所有 slash command 调用的就是同一个 runtime，数据完全一致。
 
 把 [`examples/tasks.json`](examples/tasks.json) + [`examples/keymap.json`](examples/keymap.json) 内容追加到 `~/.config/zed/{tasks,keymap}.json` 后，可一键调起浏览器：
 
