@@ -142,3 +142,13 @@ tooltip = "Delete tag"
 description = "Start the one-time 30-day Pro trial (Free)"
 requires_argument = false
 tooltip = "Start free trial"
+
+[slash_commands.gitflowgraph-remotes]
+description = "List configured git remotes + credential status"
+requires_argument = false
+tooltip = "List remotes"
+
+[slash_commands.gitflowgraph-credentials]
+description = "List stored remote-host credentials (token-masked)"
+requires_argument = false
+tooltip = "List credentials"
