@@ -10,32 +10,135 @@ repository = "https://github.com/DevEloLin/GitFlowGraph"
 name = "GitFlowGraph Runtime"
 languages = ["GitFlowGraph"]
 
+# ── Overview / help ────────────────────────────────────────────────────────
 [slash_commands.gitflowgraph]
-description = "GitFlowGraph overview: license tier, working-tree status, recent commits"
+description = "GitFlowGraph overview: license tier, working-tree, recent commits, full command list"
 requires_argument = false
-tooltip = "Open GitFlowGraph overview in Assistant panel"
+tooltip = "Open GitFlowGraph overview"
 
-[slash_commands.gitflowgraph-status]
-description = "Show working-tree status (staged + unstaged + untracked files)"
+[slash_commands.gitflowgraph-help]
+description = "List every GitFlowGraph slash command"
 requires_argument = false
-tooltip = "GitFlowGraph working-tree status"
+tooltip = "GitFlowGraph command list"
+
+# ── Read commands ──────────────────────────────────────────────────────────
+[slash_commands.gitflowgraph-status]
+description = "Working-tree status: staged + unstaged + untracked files"
+requires_argument = false
+tooltip = "Working-tree status"
 
 [slash_commands.gitflowgraph-graph]
-description = "Show recent commits as a table (usage: /gitflowgraph-graph [count])"
+description = "Recent commits as a table (usage: /gitflowgraph-graph [count])"
 requires_argument = false
-tooltip = "GitFlowGraph recent commits"
+tooltip = "Recent commits"
+
+[slash_commands.gitflowgraph-branches]
+description = "List every local + remote branch with HEAD marker"
+requires_argument = false
+tooltip = "Branches"
+
+[slash_commands.gitflowgraph-tags]
+description = "List every tag with the commit it points at"
+requires_argument = false
+tooltip = "Tags"
+
+[slash_commands.gitflowgraph-worktrees]
+description = "List git worktrees (path, branch, HEAD)"
+requires_argument = false
+tooltip = "Worktrees"
+
+[slash_commands.gitflowgraph-license]
+description = "Show license tier, expiry, machine usage"
+requires_argument = false
+tooltip = "License info"
 
 [slash_commands.gitflowgraph-diff]
-description = "Show smart diff for a ref or range (usage: /gitflowgraph-diff <commit> or <from>..<to>)"
+description = "Smart diff for a ref or range (usage: <commit> or <from>..<to>)"
 requires_argument = true
-tooltip = "GitFlowGraph smart diff"
+tooltip = "Smart diff"
 
 [slash_commands.gitflowgraph-changelog]
-description = "Generate a changelog for a range (usage: /gitflowgraph-changelog <from>..<to>)"
+description = "Generated changelog for a range (Pro)"
 requires_argument = true
-tooltip = "GitFlowGraph release changelog"
+tooltip = "Release changelog"
 
 [slash_commands.gitflowgraph-risk]
-description = "Show release risk score for a range (usage: /gitflowgraph-risk <from>..<to>)"
+description = "Release risk score + factors for a range (Pro)"
 requires_argument = true
-tooltip = "GitFlowGraph release risk score"
+tooltip = "Release risk"
+
+[slash_commands.gitflowgraph-launchpad]
+description = "Pre-flight bundle: compare + risk + changelog + checklist (Pro)"
+requires_argument = true
+tooltip = "Release launchpad"
+
+[slash_commands.gitflowgraph-velocity]
+description = "Release velocity: avg days, hotfix rate, recent releases (Pro)"
+requires_argument = false
+tooltip = "Release velocity"
+
+[slash_commands.gitflowgraph-file-history]
+description = "Every commit that touched <path> (Pro)"
+requires_argument = true
+tooltip = "File history"
+
+# ── Write / mutating commands (Pro) ───────────────────────────────────────
+[slash_commands.gitflowgraph-checkout]
+description = "Checkout a branch / tag / commit (Pro)"
+requires_argument = true
+tooltip = "Checkout"
+
+[slash_commands.gitflowgraph-cherry-pick]
+description = "Cherry-pick a commit onto current HEAD (Pro)"
+requires_argument = true
+tooltip = "Cherry-pick"
+
+[slash_commands.gitflowgraph-revert]
+description = "Create a revert commit on HEAD (Pro)"
+requires_argument = true
+tooltip = "Revert commit"
+
+[slash_commands.gitflowgraph-merge]
+description = "Merge <branch> into the currently checked-out branch (Pro)"
+requires_argument = true
+tooltip = "Merge branch"
+
+[slash_commands.gitflowgraph-reset]
+description = "Reset HEAD: usage `/gitflowgraph-reset <soft|mixed|hard> <sha>` (Pro)"
+requires_argument = true
+tooltip = "Reset HEAD"
+
+[slash_commands.gitflowgraph-fetch]
+description = "Fetch from a remote (default: origin)"
+requires_argument = false
+tooltip = "Fetch"
+
+[slash_commands.gitflowgraph-push]
+description = "Push <branch> to <remote> (default remote: origin) (Pro)"
+requires_argument = true
+tooltip = "Push branch"
+
+[slash_commands.gitflowgraph-create-branch]
+description = "Create a branch (usage: <name> [from-ref]) (Pro)"
+requires_argument = true
+tooltip = "Create branch"
+
+[slash_commands.gitflowgraph-delete-branch]
+description = "Delete a branch (usage: <name> [--force]) (Pro)"
+requires_argument = true
+tooltip = "Delete branch"
+
+[slash_commands.gitflowgraph-create-tag]
+description = "Create a tag (usage: <name> [from] [--annotated <msg>]) (Pro)"
+requires_argument = true
+tooltip = "Create tag"
+
+[slash_commands.gitflowgraph-delete-tag]
+description = "Delete a tag (Pro)"
+requires_argument = true
+tooltip = "Delete tag"
+
+[slash_commands.gitflowgraph-trial-start]
+description = "Start the one-time 30-day Pro trial (Free)"
+requires_argument = false
+tooltip = "Start free trial"
