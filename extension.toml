@@ -11,11 +11,31 @@ name = "GitFlowGraph Runtime"
 languages = ["GitFlowGraph"]
 
 [slash_commands.gitflowgraph]
-description = "Open the GitFlowGraph Git visualization panel"
+description = "GitFlowGraph overview: license tier, working-tree status, recent commits"
 requires_argument = false
-tooltip = "Launch GitFlowGraph"
+tooltip = "Open GitFlowGraph overview in Assistant panel"
+
+[slash_commands.gitflowgraph-status]
+description = "Show working-tree status (staged + unstaged + untracked files)"
+requires_argument = false
+tooltip = "GitFlowGraph working-tree status"
+
+[slash_commands.gitflowgraph-graph]
+description = "Show recent commits as a table (usage: /gitflowgraph-graph [count])"
+requires_argument = false
+tooltip = "GitFlowGraph recent commits"
 
 [slash_commands.gitflowgraph-diff]
-description = "Show smart diff for current file or commit range (usage: /gitflowgraph-diff <commit> or <from>..<to>)"
+description = "Show smart diff for a ref or range (usage: /gitflowgraph-diff <commit> or <from>..<to>)"
 requires_argument = true
 tooltip = "GitFlowGraph smart diff"
+
+[slash_commands.gitflowgraph-changelog]
+description = "Generate a changelog for a range (usage: /gitflowgraph-changelog <from>..<to>)"
+requires_argument = true
+tooltip = "GitFlowGraph release changelog"
+
+[slash_commands.gitflowgraph-risk]
+description = "Show release risk score for a range (usage: /gitflowgraph-risk <from>..<to>)"
+requires_argument = true
+tooltip = "GitFlowGraph release risk score"
