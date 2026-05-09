@@ -214,6 +214,25 @@ zed --install-extension .
 
 ---
 
+## 一键启动 / 快捷键
+
+Zed 扩展 API 目前不开放给扩展自定义状态栏图标。最接近"一键启动按钮"的方案是**用 Zed 的 task 系统 + keymap**：
+
+1. 把 [`examples/tasks.json`](examples/tasks.json) 的内容追加到 `~/.config/zed/tasks.json`
+2. 把 [`examples/keymap.json`](examples/keymap.json) 的内容追加到 `~/.config/zed/keymap.json`
+
+完成后：
+
+| 快捷键 | 行为 |
+|---|---|
+| `⌘⇧G` | 在浏览器打开 GitFlowGraph 主面板 |
+| `⌘⇧D` | 直接打开 Smart Diff 标签 |
+| `⌘⇧R` | 直接打开 Release 标签 |
+
+也可以用 `⌘⇧P` → "task: spawn" → "GitFlowGraph: Launch" 不绑定快捷键直接调用。运行时本身在你打开 Git 项目时会被 Zed 自动启动；这些 task 只是把面板带到前台。
+
+---
+
 ## 隐私
 
 - **所有 Git 操作均在本地运行** — 提交数据、Diff 内容、文件内容均不会离开你的机器
