@@ -33,6 +33,13 @@
 
 html { scroll-behavior: smooth; font-size: 16px; }
 
+/* Prevent EN→ZH content flash for users whose saved preference is Chinese.
+   The inline <head> script adds `lang-pending-zh`; applyLang() removes it
+   and adds `i18n-ready` once translations are written to the DOM. A 700ms
+   safety timeout (in i18n.js) ensures the page is never permanently hidden
+   if JS fails. */
+html.lang-pending-zh:not(.i18n-ready) body { visibility: hidden; }
+
 body {
   font-family: var(--font-sans);
   background: var(--bg);
@@ -145,6 +152,42 @@ img { display: block; max-width: 100%; }
   text-decoration: none;
 }
 .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+/* ── Language switch ─────────────────────────────────────────────────────── */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  border-radius: 999px;
+  padding: 3px;
+  flex-shrink: 0;
+}
+.lang-switch button {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.15s, background 0.15s;
+}
+.lang-switch button:hover { color: var(--text); }
+.lang-switch button.lang-active {
+  background: var(--blue-dark);
+  color: #fff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+}
+@media (max-width: 640px) {
+  .lang-switch button { padding: 4px 9px; font-size: 0.72rem; }
+}
 
 /* ── Hero ────────────────────────────────────────────────────────────────── */
 .hero {
@@ -279,6 +322,14 @@ img { display: block; max-width: 100%; }
   object-fit: cover;
   object-position: top;
 }
+
+.hero-mock {
+  width: 100%;
+  background: #0d1117;
+  display: block;
+  line-height: 0;
+}
+.hero-mock svg { display: block; width: 100%; height: auto; }
 
 /* ── Strip ───────────────────────────────────────────────────────────────── */
 .strip {
@@ -849,6 +900,70 @@ code {
   color: var(--text-3);
 }
 
+/* ── Footer "coming soon" links (Terms/Privacy until real pages exist) ──── */
+.footer-soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.footer-soon:hover { color: var(--text-3); }
+.footer-soon-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(139, 148, 158, 0.16);
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+
+/* ── Mobile nav toggle (default hidden, shown on narrow viewports) ───────── */
+.nav-toggle {
+  display: none;
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--border-2);
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: border-color 0.15s, background 0.15s;
+}
+.nav-toggle:hover { background: var(--bg-2); border-color: var(--text-3); }
+.nav-toggle:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+.nav-toggle-bar {
+  position: absolute;
+  left: 9px;
+  width: 18px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform 0.18s ease, opacity 0.18s ease, top 0.18s ease;
+}
+.nav-toggle-bar:nth-child(1) { top: 12px; }
+.nav-toggle-bar:nth-child(2) { top: 18px; }
+.nav-toggle-bar:nth-child(3) { top: 24px; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) {
+  top: 18px;
+  transform: rotate(45deg);
+}
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) {
+  top: 18px;
+  transform: rotate(-45deg);
+}
+
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .feature-block,
@@ -872,10 +987,57 @@ code {
     margin-left: 0;
     gap: 32px;
   }
+  /* Mid-range: tighten the nav so longer ZH labels still fit */
+  .nav-inner { gap: 16px; }
+  .nav-links { gap: 18px; }
+}
+
+@media (max-width: 768px) {
+  /* Hide desktop nav links + CTA, surface the hamburger button */
+  .nav-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .nav-cta { display: none; }
+  .nav-inner { gap: 12px; }
+  .nav-links {
+    position: fixed;
+    top: 64px;
+    left: 12px;
+    right: 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 8px;
+    background: var(--bg-2);
+    border: 1px solid var(--border-2);
+    border-radius: 12px;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
+    transform: translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 30;
+  }
+  .nav-links a {
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+  .nav-links a + a { border-top: 1px solid var(--border); border-radius: 0; }
+  .nav-links a:first-child { border-top-left-radius: 8px; border-top-right-radius: 8px; }
+  .nav-links a:last-child  { border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
+  .nav-links a:hover { background: var(--bg-3); }
+  /* Open state — body class is toggled by the inline JS in the HTML */
+  body.nav-open .nav-links {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  /* Tables wider than viewport: enable horizontal scroll earlier */
+  .compare-wrap { overflow-x: auto; }
+  .compare-table { min-width: 520px; }
 }
 
 @media (max-width: 640px) {
-  .nav-links { display: none; }
   .hero { padding: 64px 0 48px; }
   .hero h1 { font-size: 2rem; }
   .hero-sub { font-size: 0.95rem; }
@@ -890,8 +1052,6 @@ code {
   .section-header { margin-bottom: 40px; }
   .footer-links { flex-wrap: wrap; }
   .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 6px; }
-  .compare-wrap { overflow-x: auto; }
-  .compare-table { min-width: 520px; }
   .compare-table .col-free,
   .compare-table .col-pro { width: 72px; }
 }
