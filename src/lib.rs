@@ -881,7 +881,7 @@ fn fetch_local_post(path: &str, body: &serde_json::Value) -> std::result::Result
         // through here verbatim ("invalid commit id", "402 Pro
         // required: …"). Trim a generic prefix if present so the user
         // sees the message rather than the wrapper.
-        format!("{}", strip_status_prefix(&e))
+        strip_status_prefix(&e).to_string()
     })?;
     Ok(String::from_utf8_lossy(&resp.body).into_owned())
 }
