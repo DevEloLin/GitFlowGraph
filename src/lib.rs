@@ -1,5 +1,6 @@
 use serde::Deserialize;
 use std::fs;
+use std::sync::atomic::{AtomicU16, Ordering};
 use zed_extension_api::{
     self as zed,
     http_client::{fetch, HttpMethod, HttpRequest, RedirectPolicy},
@@ -7,9 +8,47 @@ use zed_extension_api::{
 };
 
 const RUNTIME_VERSION: &str = "0.1.0-beta.1";
-const RUNTIME_PORT: u16 = 9876;
+/// Last-resort port — used only when the language-server launch hasn't
+/// happened yet AND no per-worktree `port` file is on disk. The real
+/// port for the live runtime is discovered via the `--port-file` the
+/// extension passes to the binary; multi-window Zed must use that
+/// instead of a fixed value or two windows would collide on the same
+/// port and serve the wrong repo's data.
+const FALLBACK_PORT: u16 = 9876;
 const BINARY_STEM: &str = "gitflowgraph";
 const GITHUB_REPO: &str = "DevEloLin/GitFlowGraph";
+
+/// Most-recently-known port. Updated whenever `language_server_command`
+/// fires (which is per-worktree) and read by `fetch_local_*`. The
+/// completion entrypoint has no worktree context, so this static is
+/// the only thing that lets it talk to the right runtime in
+/// single-window use; multi-window users can still hand-type refs.
+static CURRENT_PORT: AtomicU16 = AtomicU16::new(0);
+
+/// Environment variables we forward from the user's shell to the
+/// runtime child process. libgit2 reads `HOME` / `XDG_CONFIG_HOME`
+/// (etc.) to locate `~/.gitconfig` — without these it loses
+/// `user.name`, GPG signers, credential helpers, and aliases. PATH is
+/// needed because libgit2 (and the runtime's CLI shells) invoke `git`,
+/// `ssh`, `gpg`, `hostname`, and so on.
+const PROPAGATED_ENV_KEYS: &[&str] = &[
+    "HOME",
+    "USER",
+    "USERNAME",
+    "PATH",
+    "APPDATA",
+    "LOCALAPPDATA",
+    "XDG_CONFIG_HOME",
+    "XDG_DATA_HOME",
+    "SHELL",
+    "LANG",
+    "LC_ALL",
+    "TZ",
+    "SSH_AUTH_SOCK",
+    "GIT_CONFIG",
+    "GIT_CONFIG_GLOBAL",
+    "GIT_CONFIG_SYSTEM",
+];
 
 struct GitFlowGraphExtension;
 
@@ -34,16 +73,44 @@ impl zed::Extension for GitFlowGraphExtension {
 
         let binary = self.ensure_runtime_binary(language_server_id)?;
 
+        // Per-worktree state directory. Two Zed windows opening two
+        // different repos must NOT share a port file or a config dir —
+        // doing so was the cause of multi-repo data crossover (one
+        // window's slash commands hitting the other window's runtime).
+        let state_dir = worktree_state_dir(&root);
+        let _ = fs::create_dir_all(&state_dir);
+        let port_file = format!("{state_dir}/port");
+        let config_dir = format!("{state_dir}/config");
+        // Stale port-file from a previous crash would otherwise mislead
+        // slash commands until the new runtime overwrites it.
+        let _ = fs::remove_file(&port_file);
+
+        // Prime CURRENT_PORT so single-window slash commands work
+        // immediately even before the runtime writes its port-file.
+        // Once the runtime starts and replaces the file, subsequent
+        // reads pick up the actual ephemeral port.
+        CURRENT_PORT.store(0, Ordering::Relaxed);
+
         Ok(zed::Command {
             command: binary,
             args: vec![
+                // `--port 0` lets the OS pick a free port for *this*
+                // worktree, so two simultaneous runtimes never fight
+                // for `:9876`.
                 "--port".to_string(),
-                RUNTIME_PORT.to_string(),
+                "0".to_string(),
+                "--port-file".to_string(),
+                port_file,
+                "--config-dir".to_string(),
+                config_dir,
                 "--lsp".to_string(),
                 "--repo".to_string(),
                 root,
             ],
-            env: vec![],
+            // Forward only the env vars libgit2/git need (gitconfig,
+            // ssh agent, PAGER, …). Empty env was the cause of "commits
+            // are authored as <unknown>" in shipped builds.
+            env: worktree_env(worktree),
         })
     }
 
@@ -51,8 +118,16 @@ impl zed::Extension for GitFlowGraphExtension {
         &self,
         command: SlashCommand,
         args: Vec<String>,
-        _worktree: Option<&zed::Worktree>,
+        worktree: Option<&zed::Worktree>,
     ) -> Result<SlashCommandOutput, String> {
+        // Resolve the runtime port for *this* worktree before any HTTP
+        // calls — needed for multi-window users where each window's
+        // runtime is on its own ephemeral port.
+        if let Some(wt) = worktree {
+            if let Some(p) = worktree_port(&wt.root_path()) {
+                CURRENT_PORT.store(p, Ordering::Relaxed);
+            }
+        }
         // Args helpers — every command parses its inputs the same way:
         //   `arg(0)`     → optional first arg
         //   `range_arg(default)` → "from..to" with default fallback
@@ -399,6 +474,11 @@ impl GitFlowGraphExtension {
         zed::download_file(&asset.download_url, &local_dir, file_type)
             .map_err(|e| format!("GitFlowGraph: download of `{asset_name}` failed — {e}."))?;
 
+        // TODO(integrity): publish a `<asset>.sha256` next to each release
+        // asset and verify it here before chmod+x. Computing SHA-256 in
+        // the WASM extension requires adding a crypto crate (or a hand-
+        // rolled implementation) — deferred until we have the release
+        // pipeline producing the sidecar files.
         zed::make_file_executable(&local_binary)
             .map_err(|e| format!("GitFlowGraph: failed to make binary executable — {e}"))?;
 
@@ -481,10 +561,25 @@ fn is_valid_ref_range(range: &str) -> bool {
     if range.is_empty() {
         return false;
     }
-    range.chars().all(|c| {
-        c.is_alphanumeric()
-            || matches!(c, '.' | '/' | '-' | '_' | '~' | '^' | '@' | '{' | '}')
-    })
+    // Defence in depth: a malformed range like `../../etc/passwd` made
+    // it through the per-char check because `.` and `/` are allowed. The
+    // runtime would reject it on its own, but the extension should
+    // never *send* such a string. Split on `..` (or `...`) and validate
+    // each side as a standalone ref.
+    let (left, right) = match split_range(range) {
+        Some(pair) => pair,
+        None => return false,
+    };
+    is_valid_ref(left) && is_valid_ref(right)
+}
+
+/// Split `a..b` / `a...b` into `(a, b)`. Returns `None` for inputs that
+/// look like a single ref (those go through `is_valid_ref` directly).
+fn split_range(range: &str) -> Option<(&str, &str)> {
+    if let Some(idx) = range.find("...") {
+        return Some((&range[..idx], &range[idx + 3..]));
+    }
+    range.find("..").map(|idx| (&range[..idx], &range[idx + 2..]))
 }
 
 /// Validate a single ref / branch / tag / SHA argument. Mirrors the
@@ -495,6 +590,9 @@ fn is_valid_ref(s: &str) -> bool {
     if s.is_empty() || s.len() > 256 {
         return false;
     }
+    // No leading `-` (would be misread as a CLI flag), no NUL, no
+    // `..` (would be reinterpreted as a range), no whitespace or
+    // control chars.
     if s.starts_with('-') || s.contains('\0') || s.contains("..") {
         return false;
     }
@@ -513,6 +611,72 @@ fn is_valid_commit_id(s: &str) -> bool {
 /// don't even reach the network.
 fn is_valid_file_path(s: &str) -> bool {
     !s.is_empty() && s.len() <= 4096 && !s.contains('\0')
+}
+
+// ── Per-worktree state directory + port discovery ──────────────────────────
+//
+// One Zed window per worktree means one runtime process per worktree.
+// Hard-coding `:9876` made every additional window collide with the
+// first, silently serving the wrong repo's data. To fix this we let
+// the runtime pick its port (`--port 0`) and write the actual port
+// into a per-worktree file we hash from the worktree's absolute root.
+// `language_server_command` configures the file path; slash commands
+// read it back.
+
+fn worktree_state_dir(root: &str) -> String {
+    format!("state/{}", fnv1a_hex(root))
+}
+
+fn worktree_port(root: &str) -> Option<u16> {
+    let p = format!("{}/port", worktree_state_dir(root));
+    fs::read_to_string(&p)
+        .ok()?
+        .trim()
+        .parse::<u16>()
+        .ok()
+}
+
+/// Best-known port for the runtime serving the current call. Reads
+/// from `CURRENT_PORT` (set by `run_slash_command` from the worktree)
+/// and falls back to the legacy `9876` so a freshly-installed
+/// extension whose runtime hasn't booted yet at least emits a usable
+/// (if technically inaccurate) error message instead of `:0`.
+fn current_port() -> u16 {
+    let p = CURRENT_PORT.load(Ordering::Relaxed);
+    if p == 0 {
+        FALLBACK_PORT
+    } else {
+        p
+    }
+}
+
+/// 64-bit FNV-1a over a UTF-8 string, rendered as 16 hex chars. Used
+/// to derive a per-worktree filesystem slot without dragging in a
+/// real crypto hash — collisions for the small set of paths a single
+/// user opens are not a concern, and even if they happened the only
+/// consequence is two worktrees sharing one state slot.
+fn fnv1a_hex(s: &str) -> String {
+    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+    for b in s.bytes() {
+        h ^= b as u64;
+        h = h.wrapping_mul(0x0000_0100_0000_01b3);
+    }
+    format!("{h:016x}")
+}
+
+/// Forward a curated set of env vars from the user's shell to the
+/// runtime child process. libgit2 needs HOME / XDG_CONFIG_HOME to find
+/// `~/.gitconfig` (user.name, signingkey, credential helpers, aliases);
+/// PATH is needed because the runtime shells out to `git`, `ssh`,
+/// `gpg`, `hostname`. Empty env — the previous shipped value — caused
+/// commits/tags created via the runtime to be authored as the libgit2
+/// default (blank).
+fn worktree_env(worktree: &zed::Worktree) -> Vec<(String, String)> {
+    let shell = worktree.shell_env();
+    shell
+        .into_iter()
+        .filter(|(k, _)| PROPAGATED_ENV_KEYS.contains(&k.as_str()))
+        .collect()
 }
 
 fn invalid_range_error(range: &str) -> String {
@@ -673,9 +837,10 @@ fn fetch_local_get(path: &str) -> std::result::Result<String, String> {
     // Build a GET against the runtime's loopback address. Localhost
     // requests inherit Zed's HTTP client, which permits private-IP
     // destinations — this is how other extensions reach LSP sidecars.
+    let port = current_port();
     let req = HttpRequest {
         method: HttpMethod::Get,
-        url: format!("http://127.0.0.1:{port}{path}", port = RUNTIME_PORT),
+        url: format!("http://127.0.0.1:{port}{path}"),
         headers: Vec::new(),
         body: None,
         redirect_policy: RedirectPolicy::FollowAll,
@@ -687,8 +852,7 @@ fn fetch_local_get(path: &str) -> std::result::Result<String, String> {
         format!(
             "GitFlowGraph: could not reach the runtime on port {port} ({e}). \
              The runtime is started automatically when you open a Git \
-             project — make sure the workspace contains a `.git` directory.",
-            port = RUNTIME_PORT
+             project — make sure the workspace contains a `.git` directory."
         )
     })?;
     Ok(String::from_utf8_lossy(&resp.body).into_owned())
@@ -700,9 +864,10 @@ fn fetch_local_get(path: &str) -> std::result::Result<String, String> {
 /// has no status_code so Err = transport failure or non-2xx, Ok = 2xx.
 fn fetch_local_post(path: &str, body: &serde_json::Value) -> std::result::Result<String, String> {
     let body_bytes = serde_json::to_vec(body).map_err(|e| format!("serialize body: {e}"))?;
+    let port = current_port();
     let req = HttpRequest {
         method: HttpMethod::Post,
-        url: format!("http://127.0.0.1:{port}{path}", port = RUNTIME_PORT),
+        url: format!("http://127.0.0.1:{port}{path}"),
         headers: vec![("Content-Type".into(), "application/json".into())],
         body: Some(body_bytes),
         redirect_policy: RedirectPolicy::FollowAll,
@@ -1023,7 +1188,7 @@ fn render_overview_body(license_badge: &str) -> std::result::Result<String, Stri
          wizard) open [http://localhost:{port}](http://localhost:{port}) in \
          a browser. Zed's extension API doesn't yet expose a webview — \
          every feature here is reachable as a slash command.\n",
-        port = RUNTIME_PORT
+        port = current_port()
     ));
     Ok(out)
 }
@@ -1209,7 +1374,7 @@ fn render_diff_body(base: &str, head: &str) -> std::result::Result<String, Strin
     out.push_str(&format!(
         "\n_Open the structural diff (YAML/JSON/Terraform-aware) at \
          http://localhost:{port}_\n",
-        port = RUNTIME_PORT
+        port = current_port()
     ));
     Ok(out)
 }
@@ -1397,12 +1562,14 @@ fn render_credentials() -> Result<SlashCommandOutput, String> {
     let creds: Vec<CredentialEntryDto> =
         serde_json::from_str(&body).map_err(|e| format!("parse credentials: {e}"))?;
     if creds.is_empty() {
+        let port = current_port();
         return Ok(SlashCommandOutput {
-            text: "## Stored credentials\n\n_No credentials stored._\n\n\
-                   To add one, open the **Remotes** tab in the browser UI \
-                   (http://localhost:9876) — slash commands don't accept \
-                   plaintext PATs to keep them out of Assistant chat history.\n"
-                .into(),
+            text: format!(
+                "## Stored credentials\n\n_No credentials stored._\n\n\
+                 To add one, open the **Remotes** tab in the browser UI \
+                 (http://localhost:{port}) — slash commands don't accept \
+                 plaintext PATs to keep them out of Assistant chat history.\n"
+            ),
             sections: vec![],
         });
     }
@@ -1492,13 +1659,14 @@ fn render_license() -> Result<SlashCommandOutput, String> {
         ));
     } else if lic.trial_active {
         let d = lic.days_remaining.unwrap_or(0);
+        let port = current_port();
         out.push_str(&format!(
-            "**TRIAL** · {d} day{} remaining\n\n\
+            "**TRIAL** · {d} day{plural} remaining\n\n\
              Activate a paid key with `/gitflowgraph-activate-key <key>` (TODO) \
              or open the License tab in the browser at \
-             `http://localhost:9876` and click **🔑 Activate License**.\n\n\
+             `http://localhost:{port}` and click **🔑 Activate License**.\n\n\
              [Buy License →]({buy})\n",
-            if d == 1 { "" } else { "s" },
+            plural = if d == 1 { "" } else { "s" },
             buy = lic.buy_url
         ));
     } else {
