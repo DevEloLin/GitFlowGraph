@@ -7,7 +7,7 @@ use zed_extension_api::{
     LanguageServerId, Result, SlashCommand, SlashCommandArgumentCompletion, SlashCommandOutput,
 };
 
-const RUNTIME_VERSION: &str = "0.1.0-beta.3";
+const RUNTIME_VERSION: &str = "0.1.0-beta.4";
 /// Last-resort port — used only when the language-server launch hasn't
 /// happened yet AND no per-worktree `port` file is on disk. The real
 /// port for the live runtime is discovered via the `--port-file` the
@@ -64,19 +64,29 @@ impl zed::Extension for GitFlowGraphExtension {
     ) -> Result<zed::Command> {
         let root = worktree.root_path();
 
-        if !is_git_repo(&root) {
+        // Resolve the set of git repos under this worktree. Three cases:
+        // (a) root itself is a git repo — single-repo (legacy) layout
+        // (b) root holds sibling repos — parent-folder dev layout
+        // (c) no .git anywhere within MAX_REPO_SCAN_DEPTH levels — error
+        let repos = resolve_git_roots(&root);
+        if repos.is_empty() {
             return Err(format!(
-                "GitFlowGraph: no Git repository found at `{root}`. \
-                 Open a folder that contains a `.git` directory."
+                "GitFlowGraph: no Git repository found under `{root}` \
+                 (scanned up to {MAX_REPO_SCAN_DEPTH} levels deep). \
+                 Open a folder that contains a `.git` directory, or a \
+                 parent folder that contains one within a couple of \
+                 subdirectories."
             ));
         }
 
         let binary = self.ensure_runtime_binary(language_server_id)?;
 
         // Per-worktree state directory. Two Zed windows opening two
-        // different repos must NOT share a port file or a config dir —
-        // doing so was the cause of multi-repo data crossover (one
-        // window's slash commands hitting the other window's runtime).
+        // different worktrees must NOT share a port file or a config
+        // dir — doing so was the cause of multi-repo data crossover
+        // (one window's slash commands hitting the other window's
+        // runtime). State dir is keyed by worktree root, not by repo,
+        // so a single LSP serves all sibling repos under one root.
         let state_dir = worktree_state_dir(&root);
         let _ = fs::create_dir_all(&state_dir);
         let port_file = format!("{state_dir}/port");
@@ -91,22 +101,27 @@ impl zed::Extension for GitFlowGraphExtension {
         // reads pick up the actual ephemeral port.
         CURRENT_PORT.store(0, Ordering::Relaxed);
 
+        // Build args: `--port 0 --port-file <p> --config-dir <c> --lsp`
+        // followed by one `--repo <path>` per discovered repo. clap on
+        // the runtime side declares `repo` as repeatable, so any
+        // number of `--repo` flags is folded into a Vec<PathBuf>.
+        let mut args = vec![
+            "--port".to_string(),
+            "0".to_string(),
+            "--port-file".to_string(),
+            port_file,
+            "--config-dir".to_string(),
+            config_dir,
+            "--lsp".to_string(),
+        ];
+        for repo in &repos {
+            args.push("--repo".to_string());
+            args.push(repo.clone());
+        }
+
         Ok(zed::Command {
             command: binary,
-            args: vec![
-                // `--port 0` lets the OS pick a free port for *this*
-                // worktree, so two simultaneous runtimes never fight
-                // for `:9876`.
-                "--port".to_string(),
-                "0".to_string(),
-                "--port-file".to_string(),
-                port_file,
-                "--config-dir".to_string(),
-                config_dir,
-                "--lsp".to_string(),
-                "--repo".to_string(),
-                root,
-            ],
+            args,
             // Forward only the env vars libgit2/git need (gitconfig,
             // ssh agent, PAGER, …). Empty env was the cause of "commits
             // are authored as <unknown>" in shipped builds.
@@ -555,6 +570,73 @@ fn write_installed_version(local_dir: &str) {
 fn is_git_repo(root: &str) -> bool {
     let git_path = format!("{root}/.git");
     fs::metadata(&git_path).is_ok()
+}
+
+/// Maximum depth we'll descend below the worktree root looking for
+/// nested `.git` directories. 2 covers the common monorepo-of-monorepos
+/// layout (`<root>/workspace/<repo>/.git`) without scanning the entire
+/// tree on a giant worktree.
+const MAX_REPO_SCAN_DEPTH: usize = 2;
+
+/// Resolve the set of git repositories the runtime should attach to,
+/// given Zed's worktree root.
+///
+/// Three cases the user actually opens:
+///   1. `<root>/.git` — single repo, the simple case. We return `[root]`.
+///   2. `<root>/<repo>/.git` — root holds one or more sibling repos.
+///      Common when the user opens a parent folder to see two related
+///      projects side-by-side (e.g. an extension + its runtime).
+///   3. `<root>/<group>/<repo>/.git` — nested two levels deep.
+///
+/// We scan up to `MAX_REPO_SCAN_DEPTH` to cover cases 2 and 3. Hidden
+/// dirs (starting with `.`), `node_modules`, and `target` are skipped
+/// to keep the scan fast on real projects.
+///
+/// Returns repos in a deterministic (sorted) order so multi-repo
+/// behaviour is reproducible.
+fn resolve_git_roots(root: &str) -> Vec<String> {
+    if is_git_repo(root) {
+        return vec![root.to_string()];
+    }
+    let mut found: Vec<String> = Vec::new();
+    scan_for_repos(root, 0, &mut found);
+    found.sort();
+    found
+}
+
+fn scan_for_repos(dir: &str, depth: usize, out: &mut Vec<String>) {
+    if depth > MAX_REPO_SCAN_DEPTH {
+        return;
+    }
+    let entries = match fs::read_dir(dir) {
+        Ok(e) => e,
+        Err(_) => return,
+    };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if !path.is_dir() {
+            continue;
+        }
+        let Some(name) = path.file_name().and_then(|s| s.to_str()) else {
+            continue;
+        };
+        // Skip noise that's never a repo and would blow the scan up.
+        if name.starts_with('.') || matches!(name, "node_modules" | "target" | "dist" | "build") {
+            continue;
+        }
+        let path_str = match path.to_str() {
+            Some(s) => s,
+            None => continue,
+        };
+        if is_git_repo(path_str) {
+            out.push(path_str.to_string());
+            // Don't descend INTO a repo we already matched — the inside
+            // of a repo is its own concern and we don't want to surface
+            // submodules as standalone repos.
+            continue;
+        }
+        scan_for_repos(path_str, depth + 1, out);
+    }
 }
 
 fn is_valid_ref_range(range: &str) -> bool {
