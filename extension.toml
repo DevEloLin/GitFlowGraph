@@ -8,7 +8,50 @@ repository = "https://github.com/DevEloLin/GitFlowGraph"
 
 [language_servers.gitflowgraph]
 name = "GitFlowGraph Runtime"
-languages = ["GitFlowGraph"]
+# Zed starts an LSP lazily — only when a file matching one of these
+# languages is opened. We list every language we want git blame
+# hover / inlay hints / code-lens to appear on. Zed has no `["*"]`
+# wildcard, so the list is explicit. Add new entries as needed; the
+# runtime itself doesn't care about file type — it just blames whatever
+# repo-relative path the URI resolves to.
+languages = [
+    "Rust",
+    "TypeScript",
+    "TSX",
+    "JavaScript",
+    "JSX",
+    "Python",
+    "Go",
+    "Ruby",
+    "PHP",
+    "Java",
+    "Kotlin",
+    "Swift",
+    "C",
+    "C++",
+    "C#",
+    "Objective-C",
+    "Markdown",
+    "YAML",
+    "JSON",
+    "JSONC",
+    "TOML",
+    "HTML",
+    "CSS",
+    "SCSS",
+    "Vue",
+    "Svelte",
+    "Shell Script",
+    "Bash",
+    "Fish",
+    "Lua",
+    "Dockerfile",
+    "Makefile",
+    "SQL",
+    "Terraform",
+    "HCL",
+    "Plain Text",
+]
 
 # ── Overview / help ────────────────────────────────────────────────────────
 [slash_commands.gitflowgraph]
