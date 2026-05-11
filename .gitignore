@@ -9,3 +9,4 @@ tsconfig.tsbuildinfo
 # Without this negation, the broad `*.js` rule above silently swallows
 # `docs/assets/i18n.js` and the deployed site 404s on the i18n runtime.
 !docs/assets/*.js
+extension.wasm
