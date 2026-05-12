@@ -320,6 +320,6 @@ cargo build
 
 <div align="center">
 
-为 Zed 社区构建 &nbsp;·&nbsp; [gitflowgraph.dev](https://github.com/DevEloLin/GitFlowGraph)
+为 Zed 社区构建 &nbsp;·&nbsp; [develolin.github.io/GitFlowGraph](https://develolin.github.io/GitFlowGraph/) &nbsp;·&nbsp; [dev.elolin@gmail.com](mailto:dev.elolin@gmail.com)
 
 </div>
