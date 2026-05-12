@@ -177,7 +177,7 @@ const I18N_DICT = {
     'footer.soon': 'Coming soon',
     'footer.soonTooltip': 'Page is being drafted — check back soon.',
     'footer.copyright': '© 2026 GitFlowGraph. Zed extension wrapper licensed MIT.',
-    'footer.contact': 'team@gitflowgraph.dev',
+    'footer.contact': 'dev.elolin@gmail.com',
 
     /* ───── Pricing page ───── */
     'pricing.hero.badge': 'Simple, transparent pricing',
@@ -473,7 +473,7 @@ const I18N_DICT = {
     'footer.soon': '即将上线',
     'footer.soonTooltip': '页面正在起草中，敬请期待。',
     'footer.copyright': '© 2026 GitFlowGraph. Zed 扩展本体基于 MIT 许可证。',
-    'footer.contact': 'team@gitflowgraph.dev',
+    'footer.contact': 'dev.elolin@gmail.com',
 
     /* ───── Pricing page ───── */
     'pricing.hero.badge': '简单透明的定价',
