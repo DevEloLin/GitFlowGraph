@@ -7,7 +7,7 @@ use zed_extension_api::{
     LanguageServerId, Result, SlashCommand, SlashCommandArgumentCompletion, SlashCommandOutput,
 };
 
-const RUNTIME_VERSION: &str = "0.1.0-beta.5";
+const RUNTIME_VERSION: &str = "0.1.0-beta.6";
 /// Last-resort port — used only when the language-server launch hasn't
 /// happened yet AND no per-worktree `port` file is on disk. The real
 /// port for the live runtime is discovered via the `--port-file` the
@@ -64,12 +64,11 @@ impl zed::Extension for GitFlowGraphExtension {
     ) -> Result<zed::Command> {
         let root = worktree.root_path();
 
-        // Resolve repos under this worktree. WASM sandbox limits us to
-        // verifying whether `<root>/.git` exists (see resolve_git_roots
-        // docs); for parent-folder dev layouts the user must open the
-        // actual repo subfolder rather than the parent.
-        let repos = resolve_git_roots(&root);
-        if repos.is_empty() {
+        // Probe via worktree API (NOT std::fs, which is sandboxed). For
+        // parent-folder layouts the user must open the actual repo
+        // subfolder, or use Zed's multi-worktree feature to attach
+        // each repo as its own worktree in the same window.
+        if !worktree_is_git_repo(worktree) {
             return Err(format!(
                 "GitFlowGraph: `{root}` is not a Git repository (no \
                  `.git` directory at this path).\n\n\
@@ -81,6 +80,7 @@ impl zed::Extension for GitFlowGraphExtension {
                  to project')."
             ));
         }
+        let repos = vec![root.clone()];
 
         let binary = self.ensure_runtime_binary(language_server_id)?;
 
@@ -570,41 +570,20 @@ fn write_installed_version(local_dir: &str) {
     let _ = fs::write(&version_file, RUNTIME_VERSION);
 }
 
-fn is_git_repo(root: &str) -> bool {
-    let git_path = format!("{root}/.git");
-    fs::metadata(&git_path).is_ok()
-}
-
-/// Resolve the git repositories the runtime should serve.
+/// Probe whether a worktree contains a Git repository at its root.
 ///
-/// Zed's WASM extension sandbox only authorises file system access to
-/// the extension's own work directory — `fs::read_dir` against an
-/// arbitrary path on the user's machine quietly fails with permission
-/// denied. So even though the runtime side accepts `Vec<PathBuf>` for
-/// future-proofing, the extension side can only verify a single fact
-/// about the worktree root via `fs::metadata`: does `<root>/.git`
-/// exist?
+/// The previous implementation called `std::fs::metadata("<root>/.git")`,
+/// but Zed's WASM extension sandbox does NOT authorise `std::fs::*`
+/// against arbitrary user paths — `metadata` returned `Err` even for
+/// paths that obviously exist, so `is_git_repo` was always false and
+/// every worktree fell through to "not a Git repository".
 ///
-/// Net effect:
-///   1. `<root>/.git` exists → return `vec![root]` (single-repo case,
-///      the overwhelming majority of opens). The runtime then knows
-///      one repo path.
-///   2. `<root>/.git` doesn't exist → return `vec![]`, and
-///      `language_server_command` produces a user-facing error that
-///      tells the user to open the actual repo folder instead of a
-///      parent.
-///
-/// A previous attempt at multi-repo (scanning subdirs for `.git`) was
-/// rolled back because the read_dir call lives outside the WASM
-/// sandbox's authorised paths and silently returned empty — surfacing
-/// as a confusing "no git repo found, scanned 2 levels deep" error
-/// even when repos clearly existed below the root.
-fn resolve_git_roots(root: &str) -> Vec<String> {
-    if is_git_repo(root) {
-        vec![root.to_string()]
-    } else {
-        Vec::new()
-    }
+/// `worktree.read_text_file(path)` is the correct sandbox-friendly API:
+/// it goes through Zed's privileged side and can read any file within
+/// the worktree. We probe `.git/HEAD` (a tiny text file present in
+/// every non-bare repo, regardless of branch). Ok → repo, Err → not.
+fn worktree_is_git_repo(worktree: &zed::Worktree) -> bool {
+    worktree.read_text_file(".git/HEAD").is_ok()
 }
 
 fn is_valid_ref_range(range: &str) -> bool {
