@@ -28,16 +28,22 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Update RUNTIME_VERSION in src/lib.rs
+        env:
+          # Pass through the env explicitly so the Python heredoc can read
+          # `os.environ['VERSION']` instead of trying to interpolate a bash
+          # variable into Python's f-string syntax (the previous form
+          # `{VERSION}` was seen by Python as a name lookup that failed).
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          python3 - <<EOF
-          import re
+          python3 - <<'EOF'
+          import os, re
+          version = os.environ['VERSION']
           path = 'src/lib.rs'
           with open(path) as f:
               content = f.read()
           content = re.sub(
               r'const RUNTIME_VERSION: &str = "[^"]*";',
-              f'const RUNTIME_VERSION: &str = "{VERSION}";',
+              f'const RUNTIME_VERSION: &str = "{version}";',
               content
           )
           with open(path, 'w') as f:
