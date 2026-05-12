@@ -7,7 +7,7 @@ use zed_extension_api::{
     LanguageServerId, Result, SlashCommand, SlashCommandArgumentCompletion, SlashCommandOutput,
 };
 
-const RUNTIME_VERSION: &str = "0.1.0-beta.6";
+const RUNTIME_VERSION: &str = "0.1.0-beta.7";
 /// Last-resort port — used only when the language-server launch hasn't
 /// happened yet AND no per-worktree `port` file is on disk. The real
 /// port for the live runtime is discovered via the `--port-file` the
