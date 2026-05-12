@@ -7,7 +7,7 @@ use zed_extension_api::{
     LanguageServerId, Result, SlashCommand, SlashCommandArgumentCompletion, SlashCommandOutput,
 };
 
-const RUNTIME_VERSION: &str = "0.1.0-beta.4";
+const RUNTIME_VERSION: &str = "0.1.0-beta.5";
 /// Last-resort port — used only when the language-server launch hasn't
 /// happened yet AND no per-worktree `port` file is on disk. The real
 /// port for the live runtime is discovered via the `--port-file` the
@@ -64,18 +64,21 @@ impl zed::Extension for GitFlowGraphExtension {
     ) -> Result<zed::Command> {
         let root = worktree.root_path();
 
-        // Resolve the set of git repos under this worktree. Three cases:
-        // (a) root itself is a git repo — single-repo (legacy) layout
-        // (b) root holds sibling repos — parent-folder dev layout
-        // (c) no .git anywhere within MAX_REPO_SCAN_DEPTH levels — error
+        // Resolve repos under this worktree. WASM sandbox limits us to
+        // verifying whether `<root>/.git` exists (see resolve_git_roots
+        // docs); for parent-folder dev layouts the user must open the
+        // actual repo subfolder rather than the parent.
         let repos = resolve_git_roots(&root);
         if repos.is_empty() {
             return Err(format!(
-                "GitFlowGraph: no Git repository found under `{root}` \
-                 (scanned up to {MAX_REPO_SCAN_DEPTH} levels deep). \
-                 Open a folder that contains a `.git` directory, or a \
-                 parent folder that contains one within a couple of \
-                 subdirectories."
+                "GitFlowGraph: `{root}` is not a Git repository (no \
+                 `.git` directory at this path).\n\n\
+                 Open the folder that *contains* `.git`. Example: \
+                 instead of opening `~/work`, open \
+                 `~/work/my-project` if `my-project/.git` exists.\n\n\
+                 For multi-repo workspaces, open each repo as its own \
+                 Zed worktree (Cmd+Shift+P → 'workspace: add folder \
+                 to project')."
             ));
         }
 
@@ -572,70 +575,35 @@ fn is_git_repo(root: &str) -> bool {
     fs::metadata(&git_path).is_ok()
 }
 
-/// Maximum depth we'll descend below the worktree root looking for
-/// nested `.git` directories. 2 covers the common monorepo-of-monorepos
-/// layout (`<root>/workspace/<repo>/.git`) without scanning the entire
-/// tree on a giant worktree.
-const MAX_REPO_SCAN_DEPTH: usize = 2;
-
-/// Resolve the set of git repositories the runtime should attach to,
-/// given Zed's worktree root.
+/// Resolve the git repositories the runtime should serve.
 ///
-/// Three cases the user actually opens:
-///   1. `<root>/.git` — single repo, the simple case. We return `[root]`.
-///   2. `<root>/<repo>/.git` — root holds one or more sibling repos.
-///      Common when the user opens a parent folder to see two related
-///      projects side-by-side (e.g. an extension + its runtime).
-///   3. `<root>/<group>/<repo>/.git` — nested two levels deep.
+/// Zed's WASM extension sandbox only authorises file system access to
+/// the extension's own work directory — `fs::read_dir` against an
+/// arbitrary path on the user's machine quietly fails with permission
+/// denied. So even though the runtime side accepts `Vec<PathBuf>` for
+/// future-proofing, the extension side can only verify a single fact
+/// about the worktree root via `fs::metadata`: does `<root>/.git`
+/// exist?
 ///
-/// We scan up to `MAX_REPO_SCAN_DEPTH` to cover cases 2 and 3. Hidden
-/// dirs (starting with `.`), `node_modules`, and `target` are skipped
-/// to keep the scan fast on real projects.
+/// Net effect:
+///   1. `<root>/.git` exists → return `vec![root]` (single-repo case,
+///      the overwhelming majority of opens). The runtime then knows
+///      one repo path.
+///   2. `<root>/.git` doesn't exist → return `vec![]`, and
+///      `language_server_command` produces a user-facing error that
+///      tells the user to open the actual repo folder instead of a
+///      parent.
 ///
-/// Returns repos in a deterministic (sorted) order so multi-repo
-/// behaviour is reproducible.
+/// A previous attempt at multi-repo (scanning subdirs for `.git`) was
+/// rolled back because the read_dir call lives outside the WASM
+/// sandbox's authorised paths and silently returned empty — surfacing
+/// as a confusing "no git repo found, scanned 2 levels deep" error
+/// even when repos clearly existed below the root.
 fn resolve_git_roots(root: &str) -> Vec<String> {
     if is_git_repo(root) {
-        return vec![root.to_string()];
-    }
-    let mut found: Vec<String> = Vec::new();
-    scan_for_repos(root, 0, &mut found);
-    found.sort();
-    found
-}
-
-fn scan_for_repos(dir: &str, depth: usize, out: &mut Vec<String>) {
-    if depth > MAX_REPO_SCAN_DEPTH {
-        return;
-    }
-    let entries = match fs::read_dir(dir) {
-        Ok(e) => e,
-        Err(_) => return,
-    };
-    for entry in entries.flatten() {
-        let path = entry.path();
-        if !path.is_dir() {
-            continue;
-        }
-        let Some(name) = path.file_name().and_then(|s| s.to_str()) else {
-            continue;
-        };
-        // Skip noise that's never a repo and would blow the scan up.
-        if name.starts_with('.') || matches!(name, "node_modules" | "target" | "dist" | "build") {
-            continue;
-        }
-        let path_str = match path.to_str() {
-            Some(s) => s,
-            None => continue,
-        };
-        if is_git_repo(path_str) {
-            out.push(path_str.to_string());
-            // Don't descend INTO a repo we already matched — the inside
-            // of a repo is its own concern and we don't want to surface
-            // submodules as standalone repos.
-            continue;
-        }
-        scan_for_repos(path_str, depth + 1, out);
+        vec![root.to_string()]
+    } else {
+        Vec::new()
     }
 }
 
